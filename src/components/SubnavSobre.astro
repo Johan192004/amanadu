@@ -1,0 +1,50 @@
+---
+import { subnavSobre } from '../config/site';
+
+const ruta = Astro.url.pathname.replace(/\/?$/, '/');
+---
+
+<nav class="subnav" aria-label="Sobre Amanadu">
+  <ul>
+    {
+      subnavSobre.map((item) => (
+        <li>
+          <a href={item.href} aria-current={ruta === item.href ? 'page' : undefined}>
+            {item.etiqueta}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .subnav ul {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border: 2px solid var(--azul);
+    border-radius: 999px;
+    list-style: none;
+    background: var(--hueso-claro);
+    color: var(--azul);
+  }
+
+  .subnav a {
+    display: inline-block;
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .subnav a:hover {
+    background: color-mix(in srgb, var(--naranja) 30%, transparent);
+  }
+
+  .subnav a[aria-current='page'] {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+</style>

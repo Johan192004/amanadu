@@ -1,0 +1,396 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icono from '../../components/Icono.astro';
+import Forma from '../../components/Forma.astro';
+import TarjetaJuego from '../../components/TarjetaJuego.astro';
+import PreguntasQueJugamos from '../../components/PreguntasQueJugamos.astro';
+import {
+  categorias,
+  lugares,
+  planes,
+  opcionesParticipantes,
+  opcionesDuracion,
+  opcionesModalidad,
+} from '../../data/taxonomia';
+
+const juegos = (await getCollection('juegos')).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
+const frasesPlanes = Object.fromEntries(Object.entries(planes).map(([id, p]) => [id, p.frase]));
+---
+
+<Base
+  titulo="Biblioteca de juegos"
+  descripcion="Juegos tradicionales colombianos, de mesa, de cartas, de palabras y de lógica, con instrucciones paso a paso. Encuentre a qué jugar hoy según su tiempo y su compañía."
+>
+  <!-- Cabecera -->
+  <section class="cabecera-biblio" aria-labelledby="biblio-titulo">
+    <div class="contenedor">
+      <p class="antetitulo">{juegos.length} juegos para descubrir</p>
+      <h1 id="biblio-titulo" class="titulo-mega">Biblioteca de juegos</h1>
+      <div class="cabecera-biblio__pie">
+        <p class="lead">
+          Juegos de siempre y de ahora, con instrucciones claras para que solo tenga que preocuparse por pasarla bien.
+        </p>
+        <p class="nota cabecera-biblio__nota">no hay que jugarlos todos ;)</p>
+      </div>
+      <nav class="atajos" aria-label="Ir a">
+        <a class="boton" href="#que-jugamos-hoy"><Icono nombre="dices" tamano={18} /> ¿A qué jugamos hoy?</a>
+        <a class="boton boton--claro" href="#catalogo"><Icono nombre="library" tamano={18} /> Ver el catálogo</a>
+      </nav>
+    </div>
+    <Forma tipo="chispa" class="cabecera-biblio__chispa" color="var(--naranja)" />
+  </section>
+
+  <!-- Herramienta -->
+  <section
+    id="que-jugamos-hoy"
+    class="herramienta bloque-azul sobre-oscuro seccion"
+    aria-labelledby="herramienta-titulo"
+    data-herramienta
+  >
+    <div class="contenedor">
+      <div class="herramienta__cabecera">
+        <h2 id="herramienta-titulo" class="titulo-xxl">¿A qué jugamos hoy?</h2>
+        <p class="lead">
+          Responda lo que quiera de estas cuatro preguntas. Le mostramos los juegos de la biblioteca que encajan con su
+          momento.
+        </p>
+      </div>
+
+      <form class="herramienta__formulario" novalidate>
+        <PreguntasQueJugamos prefijo="herramienta" />
+        <div class="herramienta__acciones">
+          <button class="boton boton--naranja" type="submit">
+            <Icono nombre="search" tamano={18} />
+            Buscar juegos
+          </button>
+          <button class="boton boton--fantasma" type="button" data-reiniciar>
+            <Icono nombre="rotate-ccw" tamano={18} />
+            Borrar respuestas
+          </button>
+        </div>
+        <p class="herramienta__aviso" data-aviso hidden tabindex="-1" role="alert">
+          Responda al menos una pregunta y le recomendamos algo.
+        </p>
+      </form>
+
+      <noscript>
+        <p class="herramienta__aviso">
+          Para usar esta herramienta necesita activar JavaScript. Mientras tanto, puede explorar el catálogo completo más
+          abajo.
+        </p>
+      </noscript>
+
+      <div class="resultados" data-resultados hidden aria-live="polite">
+        <p class="cargando" data-cargando>
+          <span class="cargando__puntos" aria-hidden="true"><i></i><i></i><i></i></span>
+          Buscando juegos para usted…
+        </p>
+
+        <h3 class="resultados__titulo titulo-l" data-resultados-titulo tabindex="-1" hidden></h3>
+        <p class="resultados__resumen" data-resultados-resumen hidden>
+          Escoja el que le provoque. Y si ninguno le convence, cambie sus respuestas: no hay respuesta incorrecta.
+        </p>
+        <div class="grilla grilla--3 resultados__grilla" data-resultados-grilla></div>
+
+        <div class="estado-vacio resultados__vacio" data-resultados-vacio hidden>
+          <Icono nombre="puzzle" tamano={36} />
+          <p>
+            No encontramos un juego que cumpla todas sus respuestas a la vez. Pruebe a dejar alguna pregunta sin
+            responder o a cambiar el lugar o el tiempo.
+          </p>
+        </div>
+
+        <div class="resultados__casi" data-resultados-casi hidden>
+          <h4 class="resultados__subtitulo">Estos se acercan bastante</h4>
+          <div class="grilla grilla--3" data-resultados-casi-grilla></div>
+        </div>
+
+        <div class="resultados__acciones">
+          <button class="boton boton--claro" type="button" data-cambiar>
+            <Icono nombre="sliders" tamano={18} />
+            Cambiar respuestas
+          </button>
+          <button class="boton boton--fantasma" type="button" data-reiniciar>
+            <Icono nombre="rotate-ccw" tamano={18} />
+            Empezar de nuevo
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo" class="seccion catalogo" aria-labelledby="catalogo-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <p class="antetitulo">Catálogo</p>
+        <h2 id="catalogo-titulo" class="titulo-xl">Todos los juegos</h2>
+      </div>
+
+      <form class="filtros" data-filtros role="search" aria-label="Buscar y filtrar juegos">
+        <div class="campo filtros__buscar">
+          <label class="campo__etiqueta" for="f-buscar">Buscar por nombre</label>
+          <div class="filtros__caja">
+            <Icono nombre="search" tamano={18} class="filtros__lupa" />
+            <input
+              class="control"
+              id="f-buscar"
+              name="buscar"
+              type="search"
+              placeholder="Parqués, sudoku, tejo…"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-categoria">Categoría</label>
+          <select class="control" id="f-categoria" name="categoria">
+            <option value="">Todas</option>
+            {Object.entries(categorias).map(([id, c]) => <option value={id}>{c.etiqueta}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-participantes">Participantes</label>
+          <select class="control" id="f-participantes" name="participantes">
+            <option value="">Cualquiera</option>
+            {Object.entries(opcionesParticipantes).map(([id, e]) => <option value={id}>{e}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-duracion">Duración</label>
+          <select class="control" id="f-duracion" name="duracion">
+            <option value="">Cualquiera</option>
+            {Object.entries(opcionesDuracion).map(([id, e]) => <option value={id}>{e}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-modalidad">Modalidad</label>
+          <select class="control" id="f-modalidad" name="modalidad">
+            <option value="">Ambas</option>
+            {Object.entries(opcionesModalidad).map(([id, e]) => <option value={id}>{e}</option>)}
+          </select>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="f-lugar">Lugar</label>
+          <select class="control" id="f-lugar" name="lugar">
+            <option value="">Cualquiera</option>
+            {Object.entries(lugares).map(([id, l]) => <option value={id}>{l.etiqueta}</option>)}
+          </select>
+        </div>
+      </form>
+
+      <div class="catalogo__estado">
+        <p class="catalogo__contador" aria-live="polite" data-contador>{juegos.length} juegos</p>
+        <button class="boton boton--fantasma boton--s" type="button" data-limpiar hidden>
+          <Icono nombre="x" tamano={16} />
+          Limpiar filtros
+        </button>
+      </div>
+
+      <div class="grilla grilla--3" data-catalogo>
+        {juegos.map((juego) => <TarjetaJuego juego={juego} filtrable />)}
+      </div>
+
+      <div class="estado-vacio catalogo__vacio" data-catalogo-vacio hidden>
+        <Icono nombre="search" tamano={36} />
+        <p class="titulo-l">Ningún juego coincide con esos filtros</p>
+        <p>Pruebe con otro nombre o quite alguno de los filtros. También puede pedirle una sugerencia a «¿A qué jugamos hoy?».</p>
+        <div class="catalogo__vacio-acciones">
+          <button class="boton" type="button" data-limpiar>
+            <Icono nombre="rotate-ccw" tamano={18} />
+            Limpiar filtros
+          </button>
+          <a class="boton boton--claro" href="#que-jugamos-hoy">¿A qué jugamos hoy?</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="frases-planes" set:html={JSON.stringify(frasesPlanes)} />
+</Base>
+
+<script>
+  import '../../scripts/biblioteca';
+</script>
+
+<style>
+  .cabecera-biblio {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem);
+  }
+
+  .cabecera-biblio .contenedor {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .cabecera-biblio__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .cabecera-biblio__nota {
+    transform: rotate(-4deg);
+  }
+
+  .atajos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .cabecera-biblio :global(.cabecera-biblio__chispa) {
+    position: absolute;
+    right: clamp(-2rem, 3vw, 4rem);
+    top: 2rem;
+    width: clamp(4rem, 10vw, 8rem);
+  }
+
+  /* Herramienta */
+  .herramienta__cabecera {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .herramienta__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 2rem;
+    border-top: 2px solid color-mix(in srgb, var(--hueso) 35%, transparent);
+  }
+
+  .herramienta__aviso {
+    margin-top: 1.25rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radio-s);
+    background: var(--coral);
+    color: var(--azul);
+    font-weight: 700;
+  }
+
+  .resultados {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 2px dashed color-mix(in srgb, var(--hueso) 50%, transparent);
+    scroll-margin-top: 6rem;
+  }
+
+  .resultados__titulo:focus {
+    outline: none;
+  }
+
+  .resultados__resumen {
+    margin: 0.75rem 0 2rem;
+    max-width: 60ch;
+  }
+
+  .resultados__vacio {
+    margin-top: 1.5rem;
+    max-width: 48rem;
+  }
+
+  .resultados__casi {
+    margin-top: 2.5rem;
+  }
+
+  .resultados__subtitulo {
+    margin-bottom: 1.5rem;
+    font-size: var(--t-m);
+  }
+
+  .resultados__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  /* Catálogo */
+  .filtros {
+    display: grid;
+    grid-template-columns: 1.5fr 1.3fr repeat(4, 1fr);
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--hueso-claro);
+    box-shadow: 6px 6px 0 var(--azul);
+  }
+
+  @media (max-width: 1100px) {
+    .filtros {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .filtros__buscar {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .filtros {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .filtros {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .filtros__caja {
+    position: relative;
+  }
+
+  .filtros__caja .control {
+    padding-left: 2.6rem;
+  }
+
+  .filtros :global(.filtros__lupa) {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .catalogo__estado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3rem;
+    margin: 2rem 0 1.5rem;
+  }
+
+  .catalogo__contador {
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  .catalogo__vacio {
+    margin-top: 1rem;
+  }
+
+  .catalogo__vacio-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+</style>

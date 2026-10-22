@@ -1,0 +1,233 @@
+---
+import Logo from './Logo.astro';
+import Icono from './Icono.astro';
+import Forma from './Forma.astro';
+import Eslogan from './Eslogan.astro';
+import { site, navegacion, subnavSobre } from '../config/site';
+import { categorias } from '../data/taxonomia';
+import { resolverPublico } from '../lib/recursos';
+
+const categoriasPie = (['tradicionales', 'mesa-estrategia', 'cartas', 'palabras', 'rapidos'] as const).map((id) => ({
+  id,
+  etiqueta: categorias[id].corta,
+}));
+const manualPdf = resolverPublico(site.manual.pdf);
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie bloque-azul sobre-oscuro">
+  <div class="contenedor">
+    <div class="pie__eslogan">
+      <Eslogan class="pie__frase" />
+      <Forma tipo="estrella" class="pie__estrella" color="var(--naranja)" />
+    </div>
+
+    <div class="pie__columnas">
+      <div class="pie__marca">
+        <Logo variante="claro" />
+        <p>Un lugar para recuperar el juego, la risa y el tiempo libre. Sin afán y sin culpa.</p>
+        {
+          site.redes.length > 0 && (
+            <ul class="pie__redes" aria-label="Redes de Amanadu">
+              {site.redes.map((red) => (
+                <li>
+                  <a href={red.url} target="_blank" rel="noopener noreferrer">
+                    <Icono nombre={red.icono} tamano={18} />
+                    {red.nombre}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        {
+          site.correo && (
+            <a class="pie__correo" href={`mailto:${site.correo}`}>
+              <Icono nombre="mail" tamano={18} />
+              {site.correo}
+            </a>
+          )
+        }
+      </div>
+
+      <nav aria-label="Secciones">
+        <h2 class="pie__titulo">Explore</h2>
+        <ul>
+          {
+            navegacion.map((item) => (
+              <li>
+                <a href={item.href}>{item.etiqueta}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Categorías de juegos">
+        <h2 class="pie__titulo">Biblioteca</h2>
+        <ul>
+          <li><a href="/biblioteca/#que-jugamos-hoy">¿A qué jugamos hoy?</a></li>
+          {
+            categoriasPie.map((c) => (
+              <li>
+                <a href={`/biblioteca/?categoria=${c.id}#catalogo`}>{c.etiqueta}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Sobre Amanadu">
+        <h2 class="pie__titulo">Amanadu</h2>
+        <ul>
+          {
+            subnavSobre.map((item) => (
+              <li>
+                <a href={item.href}>{item.etiqueta}</a>
+              </li>
+            ))
+          }
+          {
+            manualPdf && (
+              <li>
+                <a href={manualPdf} download={site.manual.nombreDescarga}>
+                  Descargar manual (PDF)
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="pie__base">
+      <p>© {anio} {site.nombre}</p>
+      <p class="nota">Hoy también vale la pena jugar.</p>
+      <a href="#inicio" class="pie__arriba">Volver arriba <Icono nombre="arrow-down" tamano={16} class="pie__arriba-icono" /></a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3.5rem, 8vw, 6rem) 2rem;
+  }
+
+  .pie__eslogan {
+    position: relative;
+    padding-bottom: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    border-bottom: 2px solid color-mix(in srgb, var(--hueso) 40%, transparent);
+  }
+
+  .pie :global(.pie__frase) {
+    max-width: 16ch;
+    font-family: var(--f-titulo);
+    font-size: var(--t-xxl);
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+
+  :global(.pie__estrella) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: clamp(4rem, 12vw, 9rem);
+    animation: girar 18s linear infinite;
+  }
+
+  @keyframes girar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .pie__columnas {
+    display: grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .pie__columnas {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .pie__marca {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pie__columnas {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pie__marca {
+    --logo-alto: 3rem;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    max-width: 34ch;
+  }
+
+  .pie__titulo {
+    margin-bottom: 1rem;
+    font-family: var(--f-texto);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--naranja);
+  }
+
+  .pie ul {
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .pie nav a,
+  .pie__redes a,
+  .pie__correo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .pie nav a:hover,
+  .pie__redes a:hover,
+  .pie__correo:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--naranja);
+  }
+
+  .pie__base {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: clamp(3rem, 7vw, 5rem);
+    padding-top: 1.5rem;
+    border-top: 2px solid color-mix(in srgb, var(--hueso) 40%, transparent);
+    font-size: var(--t-s);
+  }
+
+  .pie__arriba {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  :global(.pie__arriba-icono) {
+    transform: rotate(180deg);
+  }
+</style>

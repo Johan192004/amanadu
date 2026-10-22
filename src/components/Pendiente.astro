@@ -1,0 +1,21 @@
+---
+/**
+ * Señala contenido que Amanadu debe completar. Solo se ve mientras se
+ * desarrolla (npm run dev); en el sitio publicado no aparece nada.
+ */
+interface Props {
+  campo: string;
+  donde: string;
+}
+
+const { campo, donde } = Astro.props;
+---
+
+{
+  import.meta.env.DEV && (
+    <div class="pendiente">
+      <strong>Contenido pendiente: {campo}</strong>
+      Complételo en <code>{donde}</code>. Este aviso no aparece en el sitio publicado.
+    </div>
+  )
+}

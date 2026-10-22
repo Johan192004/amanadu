@@ -1,0 +1,402 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import Icono from '../components/Icono.astro';
+import Forma from '../components/Forma.astro';
+import Cinta from '../components/Cinta.astro';
+import TarjetaJuego from '../components/TarjetaJuego.astro';
+import TarjetaArticulo from '../components/TarjetaArticulo.astro';
+import PreguntasQueJugamos from '../components/PreguntasQueJugamos.astro';
+import BloquePausa from '../components/BloquePausa.astro';
+import { pilares } from '../data/pilares';
+
+const juegos = await getCollection('juegos');
+const destacados = juegos.filter((j) => j.data.destacado).slice(0, 6);
+
+const articulos = (await getCollection('articulos')).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+const articulosInicio = [
+  ...articulos.filter((a) => a.data.destacado),
+  ...articulos.filter((a) => !a.data.destacado),
+].slice(0, 3);
+---
+
+<Base>
+  <!-- Portada -->
+  <section class="portada" aria-labelledby="portada-titulo">
+    <div class="contenedor portada__grilla">
+      <div class="portada__texto">
+        <p class="antetitulo">Juego · cultura · tiempo libre</p>
+        <h1 id="portada-titulo" class="portada__titulo titulo-mega">
+          <span class="portada__linea"><span class="comilla">«</span>Hay que jugar,</span>
+          <span class="portada__linea portada__linea--resalte">hay que reír</span>
+          <span class="portada__linea">y hay que divertirse<span class="comilla">»</span>.</span>
+        </h1>
+        <p class="lead">
+          Juegos tradicionales, de mesa, de cartas y de palabras para recuperar el tiempo libre y compartirlo.
+        </p>
+        <div class="portada__acciones">
+          <a class="boton" href="/biblioteca/">
+            Explore la Biblioteca de juegos
+            <Icono nombre="arrow-right" tamano={18} />
+          </a>
+          <a class="boton boton--fantasma" href="#que-jugamos">
+            ¿A qué jugamos hoy?
+          </a>
+        </div>
+      </div>
+
+      <div class="portada__visual">
+        <Foto
+          src="/images/inicio/portada.jpg"
+          alt="Grupo de amigos riendo alrededor de una mesa mientras juegan parqués en un patio."
+          proporcion="4 / 5"
+          prioridad
+          icono="dices"
+          tono="naranja"
+          class="portada__foto"
+          sizes="(max-width: 860px) 100vw, 520px"
+        />
+        <p class="portada__sello nota" aria-hidden="true">¡anímese!</p>
+        <Forma tipo="flecha" class="portada__flecha" color="var(--coral)" />
+        <Forma tipo="estrella" class="portada__estrella" color="var(--coral)" />
+        <Forma tipo="circulo" class="portada__circulo" color="var(--naranja)" />
+      </div>
+    </div>
+  </section>
+
+  <Cinta palabras={['jugar', 'reír', 'compartir', 'parqués', 'descansar', 'crear', 'tejo', 'conversar', 'dominó', 'sin afán']} />
+
+  <!-- Selección de juegos -->
+  <section class="seccion" aria-labelledby="seleccion-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion cabecera-seccion--fila">
+        <div>
+          <p class="antetitulo">Biblioteca de juegos</p>
+          <h2 id="seleccion-titulo" class="titulo-xl">Para empezar a jugar</h2>
+        </div>
+        <a class="enlace-flecha" href="/biblioteca/#catalogo">
+          Ver los {juegos.length} juegos <Icono nombre="arrow-right" tamano={18} />
+        </a>
+      </div>
+      <div class="grilla grilla--3">
+        {destacados.map((juego) => <TarjetaJuego juego={juego} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ¿A qué jugamos hoy? -->
+  <section id="que-jugamos" class="que-jugamos bloque-azul sobre-oscuro seccion" aria-labelledby="que-jugamos-titulo">
+    <div class="contenedor">
+      <div class="que-jugamos__cabecera">
+        <h2 id="que-jugamos-titulo" class="titulo-xxl">¿A qué jugamos hoy?</h2>
+        <p class="lead">
+          Cuéntenos con quién está, cuánto tiempo tiene y qué le provoca. Le sugerimos juegos que encajen con su día.
+        </p>
+        <p class="nota que-jugamos__nota" aria-hidden="true">aquí nadie le pone tarea</p>
+      </div>
+      <form class="que-jugamos__formulario" action="/biblioteca/#que-jugamos-hoy" method="get">
+        <PreguntasQueJugamos prefijo="inicio" />
+        <div class="que-jugamos__enviar">
+          <button class="boton boton--naranja" type="submit">
+            <Icono nombre="dices" tamano={20} />
+            Ver qué jugar
+          </button>
+          <p>Puede dejar preguntas sin responder: le mostramos todo lo que encaje con el resto.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Conoce y aprende -->
+  <section class="seccion" aria-labelledby="aprende-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion cabecera-seccion--fila">
+        <div>
+          <p class="antetitulo">Conoce y aprende</p>
+          <h2 id="aprende-titulo" class="titulo-xl">Historias alrededor del juego</h2>
+        </div>
+        <a class="enlace-flecha" href="/conoce-y-aprende/">
+          Leer más artículos <Icono nombre="arrow-right" tamano={18} />
+        </a>
+      </div>
+      <div class="grilla grilla--3">
+        {articulosInicio.map((articulo) => <TarjetaArticulo articulo={articulo} />)}
+      </div>
+    </div>
+  </section>
+
+  <BloquePausa />
+
+  <!-- Presentación de Amanadu -->
+  <section class="seccion presentacion" aria-labelledby="presentacion-titulo">
+    <div class="contenedor presentacion__grilla">
+      <div class="presentacion__texto">
+        <p class="antetitulo">Sobre Amanadu</p>
+        <h2 id="presentacion-titulo" class="titulo-xl">
+          Una invitación a recuperar el juego en medio de la rutina
+        </h2>
+        <p class="lead">
+          Amanadu nace para recordar que el tiempo libre también merece un lugar en la vida: para jugar, reír, crear y
+          encontrarse con otras personas, sin que todo tenga que ser productivo.
+        </p>
+        <a class="boton boton--claro" href="/sobre-amanadu/">
+          Conozca Amanadu <Icono nombre="arrow-right" tamano={18} />
+        </a>
+      </div>
+      <ul class="pilares" aria-label="Pilares de Amanadu">
+        {
+          pilares.map((p, i) => (
+            <li class={`pilar pilar--${i % 4}`}>
+              <Icono nombre={p.icono} tamano={26} />
+              <span>{p.nombre}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Portada */
+  .portada {
+    position: relative;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3.5rem, 7vw, 6rem);
+    overflow: hidden;
+  }
+
+  .portada__grilla {
+    display: grid;
+    grid-template-columns: 1.4fr 0.6fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .portada__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .portada__texto {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+
+  .portada__titulo {
+    display: grid;
+    font-size: clamp(2.7rem, 7.2vw, 6.6rem);
+  }
+
+  .portada__linea {
+    display: block;
+  }
+
+  .comilla {
+    font-family: var(--f-nota);
+    color: var(--coral);
+    font-size: 1.1em;
+    line-height: 0;
+  }
+
+  .portada__linea--resalte {
+    justify-self: start;
+    margin-block: 0.08em;
+    padding: 0.02em 0.18em 0.08em;
+    background: var(--naranja);
+    border-radius: 0.2em;
+    transform: rotate(-2deg);
+    box-shadow: 0.08em 0.08em 0 var(--azul);
+  }
+
+  .portada__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .portada__visual {
+    position: relative;
+    max-width: 520px;
+    width: 100%;
+    justify-self: center;
+  }
+
+  .portada__visual :global(.portada__foto) {
+    position: relative;
+    z-index: 1;
+    border: 2px solid var(--azul);
+    border-radius: 48% 48% var(--radio) var(--radio) / 34% 34% var(--radio) var(--radio);
+    box-shadow: 10px 10px 0 var(--azul);
+    transform: rotate(2.5deg);
+  }
+
+  .portada__sello {
+    position: absolute;
+    left: -1.5rem;
+    bottom: 14%;
+    z-index: 3;
+    padding: 0.35rem 1.2rem 0.5rem;
+    background: var(--coral);
+    color: var(--azul) !important;
+    border: 2px solid var(--azul);
+    border-radius: 999px;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    transform: rotate(-9deg);
+  }
+
+  .portada__visual :global(.portada__flecha) {
+    position: absolute;
+    left: -4.5rem;
+    top: 18%;
+    z-index: 2;
+    width: 5rem;
+    transform: rotate(10deg);
+  }
+
+  .portada__visual :global(.portada__estrella) {
+    position: absolute;
+    right: -1.25rem;
+    top: -1.25rem;
+    z-index: 3;
+    width: 4.5rem;
+    animation: girar-portada 16s linear infinite;
+  }
+
+  .portada__visual :global(.portada__circulo) {
+    position: absolute;
+    right: -3rem;
+    bottom: -2.5rem;
+    z-index: 0;
+    width: 11rem;
+  }
+
+  @keyframes girar-portada {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .portada__visual :global(.portada__flecha) {
+      display: none;
+    }
+
+    .portada__sello {
+      left: 0;
+    }
+  }
+
+  /* ¿A qué jugamos hoy? */
+  .que-jugamos__cabecera {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .que-jugamos__nota {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: rotate(5deg);
+  }
+
+  @media (max-width: 860px) {
+    .que-jugamos__nota {
+      position: static;
+      transform: rotate(-2deg);
+    }
+  }
+
+  .que-jugamos__enviar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding-top: 2rem;
+    border-top: 2px solid color-mix(in srgb, var(--hueso) 35%, transparent);
+  }
+
+  .que-jugamos__enviar p {
+    max-width: 44ch;
+    font-size: var(--t-s);
+    opacity: 0.9;
+  }
+
+  /* Presentación */
+  .presentacion__grilla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .presentacion__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .presentacion__texto {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  .pilares {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.9rem;
+    list-style: none;
+  }
+
+  .pilar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 5.5rem;
+    padding: 1rem 1.2rem;
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    font-family: var(--f-titulo);
+    font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+    line-height: 1.05;
+    transition: transform 0.2s;
+  }
+
+  .pilar:hover {
+    transform: rotate(-1.5deg) scale(1.02);
+  }
+
+  .pilar :global(.icono) {
+    flex: none;
+  }
+
+  .pilar--0 {
+    background: var(--naranja);
+  }
+
+  .pilar--1 {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .pilar--2 {
+    background: var(--coral);
+  }
+
+  .pilar--3 {
+    background: var(--verde);
+    color: var(--hueso);
+  }
+
+  @media (max-width: 420px) {
+    .pilares {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

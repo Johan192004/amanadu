@@ -1,0 +1,71 @@
+---
+/** Cinta de palabras en movimiento. Decorativa: se oculta a lectores de pantalla. */
+import Forma from './Forma.astro';
+
+interface Props {
+  palabras: string[];
+  tono?: 'naranja' | 'azul' | 'coral' | 'verde';
+}
+
+const { palabras, tono = 'naranja' } = Astro.props;
+---
+
+<div class:list={['cinta', `bloque-${tono}`]} aria-hidden="true">
+  <div class="cinta__pista">
+    {
+      [0, 1].map(() => (
+        <div class="cinta__grupo">
+          {palabras.map((p) => (
+            <>
+              <span>{p}</span>
+              <Forma tipo="estrella" class="cinta__estrella" />
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .cinta {
+    overflow: hidden;
+    border-block: 2px solid var(--azul);
+    padding-block: 0.9rem;
+  }
+
+  .cinta__pista {
+    display: flex;
+    width: max-content;
+    animation: desplazar 38s linear infinite;
+  }
+
+  .cinta__grupo {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-right: 1.5rem;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .cinta :global(.cinta__estrella) {
+    width: 1.4rem;
+    height: 1.4rem;
+    flex: none;
+  }
+
+  @keyframes desplazar {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cinta__pista {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,241 @@
+---
+/**
+ * «Un espacio para hacer una pausa»: bloque editorial con un minuto opcional
+ * para no hacer nada. No es un ejercicio ni una técnica: es una invitación.
+ */
+import Foto from './Foto.astro';
+import Icono from './Icono.astro';
+import Forma from './Forma.astro';
+---
+
+<section class="pausa bloque-verde sobre-oscuro seccion" aria-labelledby="pausa-titulo">
+  <div class="contenedor pausa__grilla">
+    <div class="pausa__texto">
+      <p class="antetitulo">Un espacio para hacer una pausa</p>
+      <h2 id="pausa-titulo" class="titulo-xxl">¿Y si hoy no aprovecha el tiempo?</h2>
+      <p class="lead">
+        Nos enseñaron a llenar cada minuto. A sentir culpa por descansar. A convertir hasta el ocio en una meta.
+        Aquí le proponemos lo contrario: perder el tiempo a propósito.
+      </p>
+      <p class="pausa__remate">
+        Jugar, reír, conversar o no hacer nada también cuentan. El tiempo libre no tiene que rendir.
+      </p>
+
+      <div class="pausa__minuto" data-minuto>
+        <button type="button" class="boton boton--naranja" data-minuto-iniciar>
+          <Icono nombre="pause" tamano={18} />
+          <span data-minuto-etiqueta>Tómese un minuto</span>
+        </button>
+
+        <div class="pausa__reloj" data-minuto-panel hidden>
+          <svg class="pausa__anillo" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="54" class="pausa__anillo-fondo" />
+            <circle cx="60" cy="60" r="54" class="pausa__anillo-avance" data-minuto-anillo />
+          </svg>
+          <div class="pausa__reloj-texto">
+            <p class="nota" data-minuto-frase aria-live="polite">Suelte los hombros.</p>
+            <p class="pausa__segundos"><span data-minuto-segundos>60</span> s</p>
+          </div>
+          <button type="button" class="boton boton--claro boton--s" data-minuto-terminar>
+            <Icono nombre="x" tamano={16} />
+            Terminar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pausa__foto">
+      <Foto
+        src="/images/inicio/pausa.jpg"
+        alt="Persona recostada en el pasto con los ojos cerrados y un libro abierto a su lado."
+        proporcion="4 / 5"
+        icono="leaf"
+        tono="naranja"
+      />
+      <p class="pausa__sello nota">sin afán</p>
+      <Forma tipo="onda" class="pausa__forma" color="var(--naranja)" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .pausa {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pausa__grilla {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .pausa__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pausa__texto {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  .pausa__remate {
+    max-width: 44ch;
+    font-weight: 600;
+  }
+
+  .pausa__minuto {
+    margin-top: 0.5rem;
+  }
+
+  .pausa__reloj {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 1.5rem;
+  }
+
+  .pausa__reloj[hidden] {
+    display: none;
+  }
+
+  .pausa__anillo {
+    width: 6.5rem;
+    height: 6.5rem;
+    transform: rotate(-90deg);
+  }
+
+  .pausa__anillo circle {
+    fill: none;
+    stroke-width: 8;
+  }
+
+  .pausa__anillo-fondo {
+    stroke: color-mix(in srgb, var(--hueso) 25%, transparent);
+  }
+
+  .pausa__anillo-avance {
+    stroke: var(--naranja);
+    stroke-linecap: round;
+    stroke-dasharray: 339.3;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .pausa__reloj-texto {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 12rem;
+  }
+
+  .pausa__segundos {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pausa__foto {
+    position: relative;
+  }
+
+  .pausa__foto :global(.foto) {
+    border: 2px solid var(--hueso);
+    border-radius: 999px 999px var(--radio) var(--radio);
+    transform: rotate(2deg);
+  }
+
+  .pausa__sello {
+    position: absolute;
+    left: -1rem;
+    bottom: 12%;
+    z-index: 3;
+    padding: 0.4rem 1.1rem;
+    background: var(--hueso);
+    color: var(--verde) !important;
+    border-radius: 999px;
+    transform: rotate(-8deg);
+    font-size: 1.7rem;
+  }
+
+  .pausa :global(.pausa__forma) {
+    position: absolute;
+    right: -1.5rem;
+    top: -1.5rem;
+    z-index: 3;
+    width: 5.5rem;
+    animation: girar-lento 24s linear infinite;
+  }
+
+  @keyframes girar-lento {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<script>
+  const frases = [
+    'Suelte los hombros.',
+    'Mire algo que esté lejos.',
+    'No tiene que hacer nada.',
+    'Nada se va a caer por un minuto.',
+    'Escuche lo que suena alrededor.',
+    'Ya casi. Sin afán.',
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-minuto]').forEach((caja) => {
+    const iniciar = caja.querySelector<HTMLButtonElement>('[data-minuto-iniciar]')!;
+    const panel = caja.querySelector<HTMLElement>('[data-minuto-panel]')!;
+    const terminar = caja.querySelector<HTMLButtonElement>('[data-minuto-terminar]')!;
+    const frase = caja.querySelector<HTMLElement>('[data-minuto-frase]')!;
+    const segundos = caja.querySelector<HTMLElement>('[data-minuto-segundos]')!;
+    const anillo = caja.querySelector<SVGCircleElement>('[data-minuto-anillo]')!;
+    const total = 60;
+    const circunferencia = 339.3;
+    let restante = total;
+    let intervalo: number | undefined;
+
+    const pintar = () => {
+      segundos.textContent = String(restante);
+      anillo.style.strokeDashoffset = String(circunferencia * (1 - restante / total));
+    };
+
+    const detener = (mensajeFinal?: string) => {
+      window.clearInterval(intervalo);
+      if (mensajeFinal) {
+        frase.textContent = mensajeFinal;
+        caja.querySelector('[data-minuto-etiqueta]')!.textContent = 'Otro minuto';
+        window.setTimeout(() => {
+          panel.hidden = true;
+          iniciar.hidden = false;
+        }, 2500);
+      } else {
+        panel.hidden = true;
+        iniciar.hidden = false;
+        iniciar.focus();
+      }
+    };
+
+    iniciar.addEventListener('click', () => {
+      restante = total;
+      frase.textContent = frases[0];
+      pintar();
+      iniciar.hidden = true;
+      panel.hidden = false;
+      terminar.focus();
+      intervalo = window.setInterval(() => {
+        restante -= 1;
+        pintar();
+        if (restante % 10 === 0 && restante > 0) {
+          frase.textContent = frases[(total - restante) / 10] ?? frases[frases.length - 1];
+        }
+        if (restante <= 0) detener('Listo. Gracias por darse este minuto.');
+      }, 1000);
+    });
+
+    terminar.addEventListener('click', () => detener());
+  });
+</script>

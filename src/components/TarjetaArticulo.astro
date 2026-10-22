@@ -1,0 +1,127 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Foto from './Foto.astro';
+import { lineas } from '../data/taxonomia';
+import { fechaLarga } from '../lib/fechas';
+
+interface Props {
+  articulo: CollectionEntry<'articulos'>;
+  nivel?: 'h2' | 'h3';
+  /** Versión horizontal y más grande para el artículo destacado. */
+  grande?: boolean;
+}
+
+const { articulo, nivel = 'h3', grande = false } = Astro.props;
+const { data, id } = articulo;
+const Titulo = nivel;
+const linea = lineas[data.linea];
+---
+
+<article class:list={['tarjeta', 'tarjeta-articulo', { 'tarjeta-articulo--grande': grande }]} data-linea={data.linea}>
+  <Foto
+    src={data.imagen.src}
+    alt={data.imagen.alt}
+    proporcion={grande ? undefined : '3 / 2'}
+    icono="book-open"
+    tono={linea.color}
+    class="tarjeta-articulo__foto"
+    sizes={grande ? '(max-width: 800px) 100vw, 640px' : '(max-width: 700px) 100vw, 400px'}
+  />
+  <div class="tarjeta-articulo__cuerpo">
+    <p class={`tarjeta-articulo__linea linea--${linea.color}`}>{linea.etiqueta}</p>
+    <Titulo class="tarjeta-articulo__titulo">
+      <a class="tarjeta__enlace" href={`/conoce-y-aprende/${id}/`}>{data.titulo}</a>
+    </Titulo>
+    <p class="tarjeta-articulo__entradilla">{data.entradilla}</p>
+    <p class="tarjeta-articulo__fecha">
+      <time datetime={data.fecha.toISOString().slice(0, 10)}>{fechaLarga(data.fecha)}</time>
+    </p>
+  </div>
+</article>
+
+<style>
+  .tarjeta-articulo__cuerpo {
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    flex: 1;
+    padding: 1.2rem 1.3rem 1.4rem;
+    border-top: 2px solid var(--azul);
+  }
+
+  .tarjeta-articulo__linea {
+    justify-self: start;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    font-size: var(--t-xs);
+    font-weight: 700;
+  }
+
+  .linea--naranja {
+    background: var(--naranja);
+    color: var(--azul);
+  }
+
+  .linea--coral {
+    background: var(--coral);
+    color: var(--azul);
+  }
+
+  .linea--verde {
+    background: var(--verde);
+    color: var(--hueso);
+  }
+
+  .linea--azul {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .tarjeta-articulo__titulo {
+    font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+    line-height: 1.02;
+  }
+
+  .tarjeta-articulo__entradilla {
+    font-size: var(--t-s);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .tarjeta-articulo__fecha {
+    margin-top: auto;
+    font-size: var(--t-xs);
+    font-weight: 700;
+    opacity: 0.8;
+  }
+
+  @media (min-width: 800px) {
+    .tarjeta-articulo--grande {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    .tarjeta-articulo--grande :global(.tarjeta-articulo__foto) {
+      min-height: 26rem;
+    }
+
+    .tarjeta-articulo--grande .tarjeta-articulo__cuerpo {
+      align-content: center;
+      padding: 2.5rem;
+      border-top: 0;
+      border-left: 2px solid var(--azul);
+    }
+
+    .tarjeta-articulo--grande .tarjeta-articulo__titulo {
+      font-size: var(--t-xl);
+    }
+
+    .tarjeta-articulo--grande .tarjeta-articulo__entradilla {
+      font-size: 1.1rem;
+      -webkit-line-clamp: 5;
+    }
+  }
+</style>

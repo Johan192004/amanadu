@@ -1,0 +1,126 @@
+---
+/**
+ * Iconos Lucide usados en el sitio. Se importan uno por uno para no cargar
+ * toda la librería. Para usar uno nuevo, impórtelo y agréguelo al mapa.
+ */
+import ArrowDown from '@lucide/astro/icons/arrow-down';
+import ArrowLeft from '@lucide/astro/icons/arrow-left';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import BookOpen from '@lucide/astro/icons/book-open';
+import Brain from '@lucide/astro/icons/brain';
+import Check from '@lucide/astro/icons/check';
+import Clock from '@lucide/astro/icons/clock';
+import Coffee from '@lucide/astro/icons/coffee';
+import Copy from '@lucide/astro/icons/copy';
+import Crown from '@lucide/astro/icons/crown';
+import Dices from '@lucide/astro/icons/dices';
+import Download from '@lucide/astro/icons/download';
+import ExternalLink from '@lucide/astro/icons/external-link';
+import FileText from '@lucide/astro/icons/file-text';
+import Flag from '@lucide/astro/icons/flag';
+import Gauge from '@lucide/astro/icons/gauge';
+import Globe from '@lucide/astro/icons/globe';
+import Grid3x3 from '@lucide/astro/icons/grid-3x3';
+import Hourglass from '@lucide/astro/icons/hourglass';
+import House from '@lucide/astro/icons/house';
+import ImageIcon from '@lucide/astro/icons/image';
+import Camera from '@lucide/astro/icons/camera';
+import Leaf from '@lucide/astro/icons/leaf';
+import Library from '@lucide/astro/icons/library';
+import ListChecks from '@lucide/astro/icons/list-checks';
+import Mail from '@lucide/astro/icons/mail';
+import MapPin from '@lucide/astro/icons/map-pin';
+import Menu from '@lucide/astro/icons/menu';
+import MessageCircle from '@lucide/astro/icons/message-circle';
+import Package from '@lucide/astro/icons/package';
+import Palette from '@lucide/astro/icons/palette';
+import PartyPopper from '@lucide/astro/icons/party-popper';
+import Pause from '@lucide/astro/icons/pause';
+import Play from '@lucide/astro/icons/play';
+import Puzzle from '@lucide/astro/icons/puzzle';
+import RotateCcw from '@lucide/astro/icons/rotate-ccw';
+import Search from '@lucide/astro/icons/search';
+import Shuffle from '@lucide/astro/icons/shuffle';
+import SlidersHorizontal from '@lucide/astro/icons/sliders-horizontal';
+import Spade from '@lucide/astro/icons/spade';
+import Sparkles from '@lucide/astro/icons/sparkles';
+import Sun from '@lucide/astro/icons/sun';
+import Timer from '@lucide/astro/icons/timer';
+import User from '@lucide/astro/icons/user';
+import Users from '@lucide/astro/icons/users';
+import X from '@lucide/astro/icons/x';
+
+const mapa = {
+  'arrow-down': ArrowDown,
+  'arrow-left': ArrowLeft,
+  'arrow-right': ArrowRight,
+  'arrow-up-right': ArrowUpRight,
+  'book-open': BookOpen,
+  brain: Brain,
+  check: Check,
+  clock: Clock,
+  coffee: Coffee,
+  copy: Copy,
+  crown: Crown,
+  dices: Dices,
+  download: Download,
+  'external-link': ExternalLink,
+  'file-text': FileText,
+  flag: Flag,
+  gauge: Gauge,
+  globe: Globe,
+  grid: Grid3x3,
+  hourglass: Hourglass,
+  home: House,
+  image: ImageIcon,
+  instagram: Camera,
+  leaf: Leaf,
+  library: Library,
+  'list-checks': ListChecks,
+  mail: Mail,
+  'map-pin': MapPin,
+  menu: Menu,
+  'message-circle': MessageCircle,
+  package: Package,
+  palette: Palette,
+  party: PartyPopper,
+  pause: Pause,
+  play: Play,
+  puzzle: Puzzle,
+  'rotate-ccw': RotateCcw,
+  search: Search,
+  shuffle: Shuffle,
+  sliders: SlidersHorizontal,
+  spade: Spade,
+  sparkles: Sparkles,
+  sun: Sun,
+  timer: Timer,
+  user: User,
+  users: Users,
+  x: X,
+} as const;
+
+export type NombreIcono = keyof typeof mapa;
+
+interface Props {
+  nombre: NombreIcono | string;
+  tamano?: number;
+  class?: string;
+  /** Si el icono comunica algo por sí solo, describa su significado aquí. */
+  etiqueta?: string;
+}
+
+const { nombre, tamano = 20, class: clase, etiqueta } = Astro.props;
+const Componente = mapa[nombre as NombreIcono] ?? Sparkles;
+---
+
+<Componente
+  size={tamano}
+  stroke-width={2}
+  class:list={['icono', clase]}
+  aria-hidden={etiqueta ? undefined : 'true'}
+  aria-label={etiqueta}
+  role={etiqueta ? 'img' : undefined}
+  focusable="false"
+/>

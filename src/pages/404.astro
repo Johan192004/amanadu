@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Icono from '../components/Icono.astro';
+import Forma from '../components/Forma.astro';
+---
+
+<Base titulo="Página no encontrada">
+  <section class="seccion perdida">
+    <div class="contenedor perdida__contenido">
+      <p class="nota">¡uy! esta ficha se salió del tablero</p>
+      <h1 class="titulo-mega">Página no encontrada</h1>
+      <p class="lead">La página que busca no existe o cambió de lugar. No se preocupe: aquí perderse también es parte del juego.</p>
+      <div class="perdida__acciones">
+        <a class="boton" href="/"><Icono nombre="home" tamano={18} /> Volver al inicio</a>
+        <a class="boton boton--claro" href="/biblioteca/"><Icono nombre="library" tamano={18} /> Biblioteca de juegos</a>
+      </div>
+    </div>
+    <Forma tipo="estrella" class="perdida__estrella" color="var(--naranja)" />
+  </section>
+</Base>
+
+<style>
+  .perdida {
+    position: relative;
+    overflow: hidden;
+    min-height: 70vh;
+    display: grid;
+    align-items: center;
+  }
+
+  .perdida__contenido {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  .perdida__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .perdida :global(.perdida__estrella) {
+    position: absolute;
+    right: 6%;
+    top: 12%;
+    width: clamp(5rem, 14vw, 11rem);
+    animation: girar-404 20s linear infinite;
+  }
+
+  @keyframes girar-404 {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

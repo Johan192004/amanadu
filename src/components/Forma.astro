@@ -1,0 +1,69 @@
+---
+/** Recursos gráficos decorativos de la marca (siempre ocultos para lectores de pantalla). */
+interface Props {
+  tipo: 'estrella' | 'garabato' | 'flecha' | 'circulo' | 'onda' | 'chispa';
+  class?: string;
+  color?: string;
+}
+
+const { tipo, class: clase, color = 'currentColor' } = Astro.props;
+---
+
+<svg
+  class:list={['forma', `forma--${tipo}`, clase]}
+  viewBox="0 0 100 100"
+  aria-hidden="true"
+  focusable="false"
+  fill="none"
+  style={`color: ${color}`}
+>
+  {
+    tipo === 'estrella' && (
+      <path
+        fill="currentColor"
+        d="M50 0c3 21 8 33 18 38s20 7 32 12c-12 4-23 6-32 12S53 79 50 100c-3-21-8-33-18-38S12 54 0 50c12-5 23-7 32-12S47 21 50 0Z"
+      />
+    )
+  }
+  {
+    tipo === 'garabato' && (
+      <path
+        stroke="currentColor"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 62c10-22 20-22 24 0s16 22 22 0 18-22 22 0 14 22 20 0"
+      />
+    )
+  }
+  {
+    tipo === 'flecha' && (
+      <g stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 18c26-4 58 6 66 44" />
+        <path d="M62 52l14 12 10-16" />
+      </g>
+    )
+  }
+  {tipo === 'circulo' && <circle cx="50" cy="50" r="48" fill="currentColor" />}
+  {
+    tipo === 'onda' && (
+      <path
+        fill="currentColor"
+        d="M50 2l9 11 14-4 3 14 14 3-4 14 11 9-11 9 4 14-14 3-3 14-14-4-9 11-9-11-14 4-3-14-14-3 4-14L2 50l11-9-4-14 14-3 3-14 14 4z"
+      />
+    )
+  }
+  {
+    tipo === 'chispa' && (
+      <g stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <path d="M50 8v22M50 70v22M8 50h22M70 50h22M21 21l14 14M65 65l14 14M79 21 65 35M35 65 21 79" />
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .forma {
+    pointer-events: none;
+  }
+</style>

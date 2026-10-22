@@ -1,0 +1,23 @@
+---
+/** Eslogan oficial con las comillas latinas resaltadas en Mynerve. */
+import { site } from '../config/site';
+
+interface Props {
+  class?: string;
+}
+
+const partes = site.eslogan.split(/([«»])/).filter(Boolean);
+---
+
+<p class:list={['eslogan', Astro.props.class]}>
+  {partes.map((p) => (p === '«' || p === '»' ? <span class="eslogan__comilla">{p}</span> : p))}
+</p>
+
+<style>
+  .eslogan__comilla {
+    font-family: var(--f-nota);
+    color: var(--naranja);
+    font-size: 1.1em;
+    line-height: 0;
+  }
+</style>

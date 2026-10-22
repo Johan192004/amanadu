@@ -1,0 +1,76 @@
+---
+/**
+ * Fotografía editorial: blanco y negro, contraste marcado y grano analógico.
+ * El tratamiento se aplica por CSS, así que basta con subir la foto original
+ * a /public en la ruta indicada. Si la foto aún no existe, se muestra un
+ * bloque gráfico de la marca (y, en desarrollo, la ruta esperada).
+ */
+import Icono from './Icono.astro';
+import { resolverPublico } from '../lib/recursos';
+
+interface Props {
+  src?: string;
+  alt: string;
+  /** Proporción del recuadro, por ejemplo '4 / 5' o '16 / 9'. */
+  proporcion?: string;
+  /** Carga inmediata para la imagen principal de la página. */
+  prioridad?: boolean;
+  /** Icono del marcador de posición. */
+  icono?: string;
+  /** Color del marcador de posición. */
+  tono?: 'azul' | 'naranja' | 'coral' | 'verde';
+  /** Desactiva el blanco y negro (útil para material gráfico de marca). */
+  aColor?: boolean;
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  proporcion,
+  prioridad = false,
+  icono = 'image',
+  tono = 'azul',
+  aColor = false,
+  sizes,
+  class: clase,
+} = Astro.props;
+
+const ruta = resolverPublico(src);
+const tonos = {
+  azul: ['var(--azul)', 'var(--hueso)'],
+  naranja: ['var(--naranja)', 'var(--azul)'],
+  coral: ['var(--coral)', 'var(--azul)'],
+  verde: ['var(--verde)', 'var(--hueso)'],
+} as const;
+const [fondo, tinta] = tonos[tono];
+const estilo = [
+  proporcion ? `aspect-ratio: ${proporcion}` : '',
+  ruta ? '' : `--ph-fondo: ${fondo}; --ph-tinta: ${tinta}`,
+]
+  .filter(Boolean)
+  .join('; ');
+---
+
+{
+  ruta ? (
+    <figure class:list={['foto', { 'foto--a-color': aColor }, clase]} style={estilo}>
+      <img
+        src={ruta}
+        alt={alt}
+        loading={prioridad ? 'eager' : 'lazy'}
+        fetchpriority={prioridad ? 'high' : 'auto'}
+        decoding="async"
+        sizes={sizes}
+      />
+    </figure>
+  ) : (
+    <figure class:list={['foto', 'foto--vacia', clase]} style={estilo} role="img" aria-label={alt}>
+      <span class="foto__marca">
+        <Icono nombre={icono} tamano={64} />
+        {import.meta.env.DEV && src && <span class="foto__ruta">Foto pendiente: public{src}</span>}
+      </span>
+    </figure>
+  )
+}

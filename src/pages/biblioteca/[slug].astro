@@ -1,0 +1,533 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import Icono from '../../components/Icono.astro';
+import Forma from '../../components/Forma.astro';
+import TarjetaJuego from '../../components/TarjetaJuego.astro';
+import TarjetaArticulo from '../../components/TarjetaArticulo.astro';
+import { categorias, complejidades, lugares } from '../../data/taxonomia';
+import { duracionTexto, rangoTexto } from '../../lib/coincidencias';
+
+export async function getStaticPaths() {
+  const juegos = await getCollection('juegos');
+  return juegos.map((juego) => ({ params: { slug: juego.id }, props: { juego } }));
+}
+
+interface Props {
+  juego: CollectionEntry<'juegos'>;
+}
+
+const { juego } = Astro.props;
+const { data } = juego;
+const { Content } = await render(juego);
+const tieneHistoria = Boolean(juego.body?.trim());
+
+const modalidad =
+  data.jugadores.min <= 1 && data.jugadores.max >= 2
+    ? 'Individual o grupal'
+    : data.jugadores.min <= 1
+      ? 'Individual'
+      : 'Grupal';
+
+const datos = [
+  { icono: 'users', etiqueta: 'Participantes', valor: rangoTexto(data.jugadores, 'persona') },
+  { icono: 'clock', etiqueta: 'Duración', valor: duracionTexto(data.duracion) },
+  { icono: 'gauge', etiqueta: 'Complejidad', valor: complejidades[data.complejidad] },
+  { icono: 'map-pin', etiqueta: 'Dónde', valor: data.lugares.map((l) => lugares[l].etiqueta).join(' · ') },
+  { icono: 'user', etiqueta: 'Modalidad', valor: modalidad },
+];
+
+// Juegos parecidos: los que comparten más categorías.
+const parecidos = (await getCollection('juegos'))
+  .filter((j) => j.id !== juego.id)
+  .map((j) => ({ j, puntos: j.data.categorias.filter((c) => data.categorias.includes(c)).length }))
+  .filter((x) => x.puntos > 0)
+  .sort((a, b) => b.puntos - a.puntos)
+  .slice(0, 3)
+  .map((x) => x.j);
+
+const articulos = (await getCollection('articulos')).filter((a) => a.data.juegosRelacionados.includes(juego.id));
+const categoriaPrincipal = categorias[data.categorias[0]];
+---
+
+<Base titulo={data.nombre} descripcion={data.descripcion} imagen={data.imagen.src}>
+  <article>
+    <header class="ficha-cabecera">
+      <div class="contenedor">
+        <nav class="migas" aria-label="Ruta de navegación">
+          <a href="/biblioteca/"><Icono nombre="arrow-left" tamano={16} /> Biblioteca de juegos</a>
+        </nav>
+
+        <div class="ficha-cabecera__grilla">
+          <div class="ficha-cabecera__texto">
+            <ul class="ficha-cabecera__categorias" aria-label="Categorías">
+              {
+                data.categorias.map((c) => (
+                  <li>
+                    <a class="etiqueta" href={`/biblioteca/?categoria=${c}#catalogo`}>
+                      <Icono nombre={categorias[c].icono} tamano={14} />
+                      {categorias[c].corta}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <h1 class="titulo-xxl">{data.nombre}</h1>
+            <p class="nota ficha-cabecera__gancho">{data.gancho}</p>
+            <p class="lead">{data.descripcion}</p>
+          </div>
+
+          <div class="ficha-cabecera__foto">
+            <Foto
+              src={data.imagen.src}
+              alt={data.imagen.alt}
+              proporcion="1 / 1"
+              prioridad
+              icono={categoriaPrincipal.icono}
+              tono="naranja"
+              sizes="(max-width: 860px) 100vw, 520px"
+            />
+            <Forma tipo="estrella" class="ficha-cabecera__estrella" color="var(--coral)" />
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="datos bloque-azul sobre-oscuro" aria-label="Datos del juego">
+      <dl class="contenedor datos__lista">
+        {
+          datos.map((d) => (
+            <div class="datos__item">
+              <dt>
+                <Icono nombre={d.icono} tamano={18} />
+                {d.etiqueta}
+              </dt>
+              <dd>{d.valor}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <div class="contenedor ficha-cuerpo seccion">
+      <section class="instrucciones" aria-labelledby="como-se-juega">
+        <h2 id="como-se-juega" class="titulo-xl">Cómo se juega</h2>
+        <ol class="pasos">
+          {data.pasos.map((paso) => <li>{paso}</li>)}
+        </ol>
+
+        {
+          data.variantes.length > 0 && (
+            <section class="variantes" aria-labelledby="variantes-titulo">
+              <h2 id="variantes-titulo" class="titulo-l">
+                Variantes
+              </h2>
+              <p class="nota variantes__nota">para cambiarle la cara al juego</p>
+              <ul class="variantes__lista">
+                {data.variantes.map((v) => (
+                  <li class="variante">
+                    <h3>{v.nombre}</h3>
+                    <p>{v.descripcion}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+
+        {
+          tieneHistoria && (
+            <section class="historia" aria-labelledby="historia-titulo">
+              <h2 id="historia-titulo" class="titulo-l">
+                Un poco de historia
+              </h2>
+              <div class="prosa">
+                <Content />
+              </div>
+            </section>
+          )
+        }
+
+        {
+          data.fuentes.length > 0 && (
+            <section class="fuentes" aria-labelledby="fuentes-titulo">
+              <h2 id="fuentes-titulo" class="fuentes__titulo">
+                Fuentes
+              </h2>
+              <ul>
+                {data.fuentes.map((f) => (
+                  <li>
+                    {f.url ? (
+                      <a href={f.url} target="_blank" rel="noopener noreferrer">
+                        {f.titulo}
+                        <Icono nombre="external-link" tamano={14} />
+                        <span class="solo-lectores">(abre en otra pestaña)</span>
+                      </a>
+                    ) : (
+                      f.titulo
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </section>
+
+      <aside class="materiales" aria-labelledby="materiales-titulo">
+        <div class="materiales__caja">
+          <h2 id="materiales-titulo" class="materiales__titulo">
+            <Icono nombre="package" tamano={22} /> Qué necesita
+          </h2>
+          <ul>
+            {data.materiales.map((m) => <li>{m}</li>)}
+          </ul>
+        </div>
+        <div class="materiales__caja materiales__caja--naranja">
+          <p class="materiales__titulo"><Icono nombre="dices" tamano={22} /> ¿No sabe cuál escoger?</p>
+          <p>Cuéntenos con quién está y cuánto tiempo tiene, y le sugerimos otros juegos.</p>
+          <a class="boton boton--s" href="/biblioteca/#que-jugamos-hoy">¿A qué jugamos hoy?</a>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  {
+    articulos.length > 0 && (
+      <section class="seccion bloque-hueso" aria-labelledby="leer-titulo">
+        <div class="contenedor">
+          <div class="cabecera-seccion">
+            <p class="antetitulo">Conoce y aprende</p>
+            <h2 id="leer-titulo" class="titulo-l">
+              Para leer sobre este juego
+            </h2>
+          </div>
+          <div class="grilla grilla--3">
+            {articulos.slice(0, 3).map((a) => (
+              <TarjetaArticulo articulo={a} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    parecidos.length > 0 && (
+      <section class="seccion" aria-labelledby="parecidos-titulo">
+        <div class="contenedor">
+          <div class="cabecera-seccion cabecera-seccion--fila">
+            <h2 id="parecidos-titulo" class="titulo-l">
+              Si le gustó, pruebe también
+            </h2>
+            <a class="enlace-flecha" href="/biblioteca/#catalogo">
+              Volver al catálogo <Icono nombre="arrow-right" tamano={18} />
+            </a>
+          </div>
+          <div class="grilla grilla--3">
+            {parecidos.map((j) => (
+              <TarjetaJuego juego={j} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .ficha-cabecera {
+    padding-block: 2rem clamp(3rem, 6vw, 5rem);
+  }
+
+  .migas a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    font-size: var(--t-s);
+    text-decoration: none;
+  }
+
+  .migas a:hover {
+    text-decoration: underline;
+  }
+
+  .ficha-cabecera__grilla {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 860px) {
+    .ficha-cabecera__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ficha-cabecera__texto {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ficha-cabecera__categorias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .ficha-cabecera__categorias a {
+    text-decoration: none;
+  }
+
+  .ficha-cabecera__categorias a:hover {
+    background: var(--naranja);
+    border-color: var(--naranja);
+  }
+
+  .ficha-cabecera__gancho {
+    transform: rotate(-1.5deg);
+    transform-origin: left;
+  }
+
+  .ficha-cabecera__foto {
+    position: relative;
+  }
+
+  .ficha-cabecera__foto :global(.foto) {
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    box-shadow: 10px 10px 0 var(--azul);
+    transform: rotate(-1.5deg);
+  }
+
+  .ficha-cabecera__foto :global(.ficha-cabecera__estrella) {
+    position: absolute;
+    right: -1.25rem;
+    top: -1.25rem;
+    z-index: 3;
+    width: 4rem;
+  }
+
+  /* Datos */
+  .datos {
+    padding-block: 1.75rem;
+  }
+
+  .datos__lista {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.25rem 2rem;
+    margin-block: 0;
+  }
+
+  @media (max-width: 960px) {
+    .datos__lista {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .datos__item dt {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--naranja);
+  }
+
+  .datos__item dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.1;
+  }
+
+  /* Cuerpo */
+  .ficha-cuerpo {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .ficha-cuerpo {
+      grid-template-columns: 1fr;
+    }
+
+    .materiales {
+      order: -1;
+    }
+  }
+
+  .instrucciones {
+    display: grid;
+    gap: 2rem;
+    min-width: 0;
+  }
+
+  .pasos {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    counter-reset: paso;
+    max-width: var(--ancho-texto);
+  }
+
+  .pasos li {
+    position: relative;
+    padding: 1rem 1.25rem 1rem 4.25rem;
+    border-bottom: 2px solid color-mix(in srgb, var(--azul) 18%, transparent);
+    font-size: 1.075rem;
+    line-height: 1.6;
+    counter-increment: paso;
+  }
+
+  .pasos li::before {
+    content: counter(paso);
+    position: absolute;
+    left: 0;
+    top: 0.85rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--naranja);
+    font-family: var(--f-titulo);
+    font-size: 1.25rem;
+  }
+
+  .pasos li:nth-child(3n + 2)::before {
+    background: var(--coral);
+  }
+
+  .pasos li:nth-child(3n)::before {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .variantes,
+  .historia {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .variantes__nota {
+    margin-top: -0.5rem;
+  }
+
+  .variantes__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 1rem;
+    list-style: none;
+    margin-top: 0.5rem;
+  }
+
+  .variante {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.25rem;
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--hueso-claro);
+  }
+
+  .variante h3 {
+    font-size: 1.3rem;
+  }
+
+  .variante p {
+    font-size: var(--t-s);
+  }
+
+  .fuentes {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--azul);
+    font-size: var(--t-s);
+  }
+
+  .fuentes__titulo {
+    margin-bottom: 0.75rem;
+    font-family: var(--f-texto);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .fuentes ul {
+    display: grid;
+    gap: 0.5rem;
+    padding-left: 1.2rem;
+  }
+
+  .fuentes a {
+    display: inline;
+  }
+
+  .fuentes a :global(.icono) {
+    display: inline;
+    vertical-align: -2px;
+    margin-left: 0.2rem;
+  }
+
+  /* Materiales */
+  .materiales {
+    position: sticky;
+    top: 6.5rem;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 960px) {
+    .materiales {
+      position: static;
+    }
+  }
+
+  .materiales__caja {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: 1.5rem;
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--hueso-claro);
+    box-shadow: 6px 6px 0 var(--azul);
+  }
+
+  .materiales__caja--naranja {
+    background: var(--naranja);
+  }
+
+  .materiales__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--f-titulo);
+    font-size: 1.4rem;
+    line-height: 1.1;
+  }
+
+  .materiales ul {
+    display: grid;
+    gap: 0.6rem;
+    padding-left: 1.2rem;
+  }
+
+  .materiales li::marker {
+    color: var(--naranja);
+  }
+</style>

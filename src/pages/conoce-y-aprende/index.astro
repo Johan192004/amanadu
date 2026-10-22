@@ -1,0 +1,225 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Forma from '../../components/Forma.astro';
+import TarjetaArticulo from '../../components/TarjetaArticulo.astro';
+import { lineas } from '../../data/taxonomia';
+
+const articulos = (await getCollection('articulos')).sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf());
+const principal = articulos.find((a) => a.data.destacado) ?? articulos[0];
+const resto = articulos.filter((a) => a !== principal);
+const conteo = (linea: string) => articulos.filter((a) => a.data.linea === linea).length;
+---
+
+<Base
+  titulo="Conoce y aprende"
+  descripcion="Artículos sobre juego, cultura, tradición colombiana, creatividad, tiempo libre y el valor de hacer una pausa."
+>
+  <section class="cabecera-aprende" aria-labelledby="aprende-titulo">
+    <div class="contenedor">
+      <p class="antetitulo">Ideas, historias y cultura del juego</p>
+      <h1 id="aprende-titulo" class="titulo-mega">Conoce y aprende</h1>
+      <p class="lead">
+        Lecturas cortas sobre por qué jugamos, de dónde vienen nuestros juegos y por qué el tiempo libre también merece
+        un lugar en el día.
+      </p>
+    </div>
+    <Forma tipo="garabato" class="cabecera-aprende__garabato" color="var(--coral)" />
+  </section>
+
+  <section class="seccion seccion--sin-arriba" aria-label="Artículos">
+    <div class="contenedor">
+      <div class="lineas" role="group" aria-label="Filtrar por línea temática" data-lineas>
+        <button type="button" class="linea-boton" aria-pressed="true" data-linea="">
+          <span class="linea-boton__nombre">Todas</span>
+          <span class="linea-boton__desc">{articulos.length} artículos</span>
+        </button>
+        {
+          Object.entries(lineas).map(([id, l]) => (
+            <button type="button" class={`linea-boton linea-boton--${l.color}`} aria-pressed="false" data-linea={id}>
+              <span class="linea-boton__nombre">{l.etiqueta}</span>
+              <span class="linea-boton__desc">{l.descripcion}</span>
+              <span class="linea-boton__conteo">{conteo(id)}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <p class="solo-lectores" aria-live="polite" data-lineas-estado></p>
+
+      {
+        principal && (
+          <div class="aprende-principal" data-articulo-envoltura data-linea={principal.data.linea}>
+            <TarjetaArticulo articulo={principal} nivel="h2" grande />
+          </div>
+        )
+      }
+
+      <div class="grilla grilla--3 aprende-grilla">
+        {
+          resto.map((a) => (
+            <div data-articulo-envoltura data-linea={a.data.linea} class="aprende-item">
+              <TarjetaArticulo articulo={a} nivel="h2" />
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="estado-vacio" data-lineas-vacio hidden>
+        <p class="titulo-l">Pronto habrá artículos en esta línea</p>
+        <p>Mientras tanto, explore las demás lecturas.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const grupo = document.querySelector<HTMLElement>('[data-lineas]');
+  if (grupo) {
+    const botones = [...grupo.querySelectorAll<HTMLButtonElement>('button')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-articulo-envoltura]')];
+    const vacio = document.querySelector<HTMLElement>('[data-lineas-vacio]')!;
+    const estado = document.querySelector<HTMLElement>('[data-lineas-estado]')!;
+
+    const filtrar = (linea: string) => {
+      let visibles = 0;
+      botones.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.linea === linea)));
+      items.forEach((el) => {
+        const ok = !linea || el.dataset.linea === linea;
+        el.hidden = !ok;
+        if (ok) visibles++;
+      });
+      vacio.hidden = visibles > 0;
+      estado.textContent = `${visibles} artículos`;
+      const url = new URL(location.href);
+      if (linea) url.searchParams.set('linea', linea);
+      else url.searchParams.delete('linea');
+      history.replaceState(null, '', url);
+    };
+
+    botones.forEach((b) => b.addEventListener('click', () => filtrar(b.dataset.linea ?? '')));
+    const inicial = new URLSearchParams(location.search).get('linea');
+    if (inicial && botones.some((b) => b.dataset.linea === inicial)) filtrar(inicial);
+  }
+</script>
+
+<style>
+  .cabecera-aprende {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .cabecera-aprende .contenedor {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .cabecera-aprende :global(.cabecera-aprende__garabato) {
+    position: absolute;
+    right: 4%;
+    bottom: 1rem;
+    width: clamp(6rem, 16vw, 13rem);
+  }
+
+  .seccion--sin-arriba {
+    padding-top: 0;
+  }
+
+  .lineas {
+    display: grid;
+    grid-template-columns: 0.6fr repeat(4, 1fr);
+    gap: 0.9rem;
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  @media (max-width: 1100px) {
+    .lineas {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .lineas {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .linea-boton {
+    position: relative;
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+    padding: 1rem 1.1rem;
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--hueso-claro);
+    color: var(--azul);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .linea-boton:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--azul);
+  }
+
+  .linea-boton[aria-pressed='true'] {
+    background: var(--azul);
+    color: var(--hueso);
+    box-shadow: 4px 4px 0 var(--naranja);
+  }
+
+  .linea-boton--naranja[aria-pressed='true'] {
+    background: var(--naranja);
+    color: var(--azul);
+    box-shadow: 4px 4px 0 var(--azul);
+  }
+
+  .linea-boton--coral[aria-pressed='true'] {
+    background: var(--coral);
+    color: var(--azul);
+    box-shadow: 4px 4px 0 var(--azul);
+  }
+
+  .linea-boton--verde[aria-pressed='true'] {
+    background: var(--verde);
+    color: var(--hueso);
+    box-shadow: 4px 4px 0 var(--azul);
+  }
+
+  .linea-boton__nombre {
+    padding-right: 1.5rem;
+    font-family: var(--f-titulo);
+    font-size: 1.15rem;
+    line-height: 1.05;
+  }
+
+  .linea-boton__desc {
+    font-size: var(--t-xs);
+    line-height: 1.4;
+  }
+
+  .linea-boton__conteo {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.9rem;
+    font-weight: 800;
+    font-size: var(--t-s);
+  }
+
+  .aprende-principal {
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .aprende-item {
+    display: flex;
+  }
+
+  .aprende-item > :global(*) {
+    flex: 1;
+  }
+</style>

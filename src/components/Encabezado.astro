@@ -1,0 +1,268 @@
+---
+import Logo from './Logo.astro';
+import Icono from './Icono.astro';
+import { navegacion } from '../config/site';
+
+const ruta = Astro.url.pathname.replace(/\/?$/, '/');
+const activo = (href: string) => (href === '/' ? ruta === '/' : ruta.startsWith(href));
+---
+
+<header class="encabezado" data-encabezado>
+  <div class="contenedor encabezado__barra">
+    <a href="/" class="encabezado__logo" aria-label="Amanadu, ir al inicio">
+      <Logo class="encabezado__logo-principal" />
+      <Logo variante="claro" class="encabezado__logo-claro" />
+    </a>
+
+    <button
+      class="encabezado__menu"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      data-boton-menu
+    >
+      <span class="encabezado__menu-abrir"><Icono nombre="menu" tamano={22} /> Menú</span>
+      <span class="encabezado__menu-cerrar"><Icono nombre="x" tamano={22} /> Cerrar</span>
+    </button>
+
+    <nav id="menu-principal" class="navegacion" aria-label="Principal">
+      <ul>
+        {
+          navegacion.map((item, i) => (
+            <li>
+              <a href={item.href} aria-current={activo(item.href) ? 'page' : undefined}>
+                <span class="navegacion__num" aria-hidden="true">
+                  0{i + 1}
+                </span>
+                {item.etiqueta}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="navegacion__nota nota" aria-hidden="true">¡sin afán!</p>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .encabezado {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--azul);
+  }
+
+  /* El desenfoque va en un pseudo-elemento: si estuviera en el encabezado,
+     el menú móvil (position: fixed) quedaría encerrado dentro de él. */
+  .encabezado::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--hueso) 92%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .encabezado__barra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.5rem;
+  }
+
+  .encabezado__logo {
+    --logo-alto: 2.4rem;
+    display: inline-flex;
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+
+  .encabezado__logo:hover {
+    transform: rotate(-3deg);
+  }
+
+  .encabezado__logo :global(.encabezado__logo-claro),
+  [data-abierto] .encabezado__logo :global(.encabezado__logo-principal) {
+    display: none;
+  }
+
+  [data-abierto] .encabezado__logo :global(.encabezado__logo-claro) {
+    display: inline-flex;
+  }
+
+  .navegacion ul {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .navegacion a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.975rem;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+
+  .navegacion a:hover {
+    background: color-mix(in srgb, var(--naranja) 30%, transparent);
+  }
+
+  .navegacion a[aria-current='page'] {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .navegacion__num {
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  .navegacion__nota,
+  .encabezado__menu {
+    display: none;
+  }
+
+  @media (max-width: 960px) {
+    .encabezado__menu {
+      position: relative;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+      padding: 0.4rem 1rem;
+      border: 2px solid var(--azul);
+      border-radius: 999px;
+      background: var(--hueso);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .encabezado__menu span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .encabezado__menu .encabezado__menu-cerrar,
+    [data-abierto] .encabezado__menu .encabezado__menu-abrir {
+      display: none;
+    }
+
+    [data-abierto] .encabezado__menu .encabezado__menu-cerrar {
+      display: inline-flex;
+    }
+
+    .navegacion {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      padding: 6rem var(--margen) 3rem;
+      overflow-y: auto;
+      background: var(--azul);
+      color: var(--hueso);
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-1rem);
+      transition:
+        opacity 0.25s,
+        transform 0.25s,
+        visibility 0.25s;
+    }
+
+    [data-abierto] .navegacion {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+    }
+
+    [data-abierto] .encabezado__logo {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Centrado que no se monta sobre el logo en pantallas bajas */
+    .navegacion ul {
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .navegacion a {
+      font-family: var(--f-titulo);
+      font-weight: 400;
+      font-size: clamp(2rem, 9vw, 3.25rem);
+      line-height: 1;
+      padding: 0.35rem 0;
+      border-radius: 0;
+      gap: 0.75rem;
+    }
+
+    .navegacion a:hover,
+    .navegacion a[aria-current='page'] {
+      background: none;
+      color: var(--naranja);
+    }
+
+    .navegacion__num {
+      font-family: var(--f-texto);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .navegacion__nota {
+      display: block;
+      margin-bottom: auto;
+      color: var(--naranja);
+      transform: rotate(-4deg);
+    }
+  }
+</style>
+
+<script>
+  const encabezado = document.querySelector<HTMLElement>('[data-encabezado]');
+  const boton = document.querySelector<HTMLButtonElement>('[data-boton-menu]');
+
+  if (encabezado && boton) {
+    const cerrar = () => {
+      delete encabezado.dataset.abierto;
+      boton.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    };
+    const abrir = () => {
+      encabezado.dataset.abierto = '';
+      boton.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    };
+
+    boton.addEventListener('click', () => {
+      if (encabezado.hasAttribute('data-abierto')) {
+        cerrar();
+      } else {
+        abrir();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && encabezado.hasAttribute('data-abierto')) {
+        cerrar();
+        boton.focus();
+      }
+    });
+
+    window.matchMedia('(min-width: 961px)').addEventListener('change', (e) => {
+      if (e.matches) cerrar();
+    });
+  }
+</script>

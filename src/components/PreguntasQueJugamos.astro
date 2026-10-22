@@ -1,0 +1,112 @@
+---
+/**
+ * Las cuatro preguntas de «¿A qué jugamos hoy?». Se usan en Inicio (como
+ * formulario que lleva a la Biblioteca) y en la herramienta completa.
+ */
+import { opcionesParticipantes, opcionesDuracion, planes } from '../data/taxonomia';
+
+interface Props {
+  /** Prefijo para que los id no se repitan si hay dos formularios en la página. */
+  prefijo: string;
+}
+
+const { prefijo } = Astro.props;
+
+const preguntas = [
+  {
+    nombre: 'con',
+    titulo: '¿Con quién va a jugar?',
+    icono: 'users',
+    opciones: Object.entries(opcionesParticipantes),
+  },
+  {
+    nombre: 'tiempo',
+    titulo: '¿Cuánto tiempo tiene?',
+    icono: 'clock',
+    opciones: Object.entries(opcionesDuracion),
+  },
+  {
+    nombre: 'donde',
+    titulo: '¿Dónde quiere jugar?',
+    icono: 'map-pin',
+    opciones: [
+      ['casa', 'En casa'],
+      ['aire-libre', 'Al aire libre'],
+      ['cualquier-lugar', 'En cualquier lugar'],
+    ],
+  },
+  {
+    nombre: 'plan',
+    titulo: '¿Qué le provoca hacer?',
+    icono: 'sparkles',
+    opciones: Object.entries(planes).map(([id, p]) => [id, p.etiqueta]),
+  },
+];
+---
+
+<div class="preguntas">
+  {
+    preguntas.map((p, i) => (
+      <fieldset class="pregunta">
+        <legend class="pregunta__titulo">
+          <span class="pregunta__num" aria-hidden="true">
+            {i + 1}
+          </span>
+          {p.titulo}
+        </legend>
+        <div class="pregunta__opciones">
+          {p.opciones.map(([valor, etiqueta]) => (
+            <label class="ficha-opcion" for={`${prefijo}-${p.nombre}-${valor}`}>
+              <input type="radio" id={`${prefijo}-${p.nombre}-${valor}`} name={p.nombre} value={valor} />
+              <span>{etiqueta}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    ))
+  }
+</div>
+
+<style>
+  .preguntas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .pregunta {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .pregunta__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.9rem;
+    padding: 0;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.3rem, 2.4vw, 1.65rem);
+    line-height: 1.05;
+  }
+
+  .pregunta__num {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 50%;
+    background: var(--naranja);
+    color: var(--azul);
+    font-size: 1rem;
+  }
+
+  .pregunta__opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+</style>

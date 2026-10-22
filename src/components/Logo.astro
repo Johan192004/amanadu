@@ -1,0 +1,50 @@
+---
+/**
+ * Logo de Amanadu. Usa los archivos oficiales de /public/brand/ cuando existen;
+ * mientras tanto muestra un logotipo tipográfico provisional.
+ */
+import { site } from '../config/site';
+import { resolverPublico } from '../lib/recursos';
+
+interface Props {
+  variante?: 'principal' | 'claro';
+  class?: string;
+}
+
+const { variante = 'principal', class: clase } = Astro.props;
+const archivo = resolverPublico(site.logo[variante]) ?? (variante === 'claro' ? resolverPublico(site.logo.principal) : null);
+---
+
+{
+  archivo ? (
+    <img src={archivo} alt={site.logo.alt} class:list={['logo', clase]} width="180" height="56" />
+  ) : (
+    <span class:list={['logo', 'logo--texto', `logo--${variante}`, clase]}>
+      <span class="solo-lectores">{site.nombre}</span>
+      <span aria-hidden="true">amanadu</span>
+    </span>
+  )
+}
+
+<style>
+  .logo {
+    display: block;
+    height: var(--logo-alto, 2.5rem);
+    width: auto;
+  }
+
+  .logo--texto {
+    display: inline-flex;
+    align-items: center;
+    height: auto;
+    font-family: var(--f-titulo);
+    font-size: calc(var(--logo-alto, 2.5rem) * 0.82);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--azul);
+  }
+
+  .logo--claro {
+    color: var(--hueso);
+  }
+</style>

@@ -1,0 +1,317 @@
+---
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import Icono from '../../components/Icono.astro';
+import Forma from '../../components/Forma.astro';
+import Eslogan from '../../components/Eslogan.astro';
+import Pendiente from '../../components/Pendiente.astro';
+import SubnavSobre from '../../components/SubnavSobre.astro';
+import { nosotras } from '../../data/nosotras';
+import { pilares } from '../../data/pilares';
+
+const tonos = ['naranja', 'azul', 'coral', 'verde'] as const;
+---
+
+<Base
+  titulo="Nosotras"
+  descripcion="Conozca Amanadu: una invitación a recuperar el juego, la risa, el tiempo libre y la conexión con los demás."
+>
+  <section class="nos-cabecera" aria-labelledby="nos-titulo">
+    <div class="contenedor nos-cabecera__grilla">
+      <div class="nos-cabecera__texto">
+        <SubnavSobre />
+        <p class="antetitulo">Sobre Amanadu</p>
+        <h1 id="nos-titulo" class="titulo-mega">Nosotras</h1>
+        {nosotras.identidad.map((p, i) => <p class={i === 0 ? 'lead' : ''}>{p}</p>)}
+      </div>
+      <div class="nos-cabecera__foto">
+        <Foto
+          src={nosotras.fotoPrincipal.src}
+          alt={nosotras.fotoPrincipal.alt}
+          proporcion="4 / 5"
+          prioridad
+          icono="users"
+          tono="coral"
+        />
+        <Forma tipo="onda" class="nos-cabecera__onda" color="var(--naranja)" />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion bloque-azul sobre-oscuro" aria-labelledby="proposito-titulo">
+    <div class="contenedor proposito">
+      <div>
+        <p class="antetitulo">Propósito</p>
+        <h2 id="proposito-titulo" class="titulo-xl">El tiempo libre también merece un lugar</h2>
+      </div>
+      <div class="proposito__texto">
+        {nosotras.proposito.map((p) => <p>{p}</p>)}
+        <Eslogan class="proposito__eslogan" />
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="principios-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <p class="antetitulo">Lo que nos mueve</p>
+        <h2 id="principios-titulo" class="titulo-xl">Nuestros pilares</h2>
+      </div>
+      <ul class="principios">
+        {
+          pilares.map((p, i) => (
+            <li class={`principio bloque-${tonos[i % tonos.length]}`}>
+              <Icono nombre={p.icono} tamano={30} />
+              <h3>{p.nombre}</h3>
+              <p>{p.texto}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    (nosotras.historia.length > 0 || import.meta.env.DEV) && (
+      <section class="seccion bloque-hueso" aria-labelledby="historia-titulo">
+        <div class="contenedor historia">
+          <div>
+            <p class="antetitulo">Historia</p>
+            <h2 id="historia-titulo" class="titulo-xl">
+              Cómo empezó Amanadu
+            </h2>
+          </div>
+          <div class="historia__texto">
+            {nosotras.historia.length > 0 ? (
+              nosotras.historia.map((p) => <p>{p}</p>)
+            ) : (
+              <Pendiente campo="historia de Amanadu" donde="src/data/nosotras.ts → historia" />
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    (nosotras.equipo.length > 0 || import.meta.env.DEV) && (
+      <section class="seccion" aria-labelledby="equipo-titulo">
+        <div class="contenedor">
+          <div class="cabecera-seccion">
+            <p class="antetitulo">Equipo</p>
+            <h2 id="equipo-titulo" class="titulo-xl">
+              Quiénes estamos detrás
+            </h2>
+          </div>
+          {nosotras.equipo.length > 0 ? (
+            <ul class="grilla grilla--4 equipo">
+              {nosotras.equipo.map((persona, i) => (
+                <li class="integrante">
+                  <Foto
+                    src={persona.foto}
+                    alt={`Retrato de ${persona.nombre}`}
+                    proporcion="1 / 1"
+                    icono="user"
+                    tono={tonos[i % tonos.length]}
+                  />
+                  <h3>{persona.nombre}</h3>
+                  <p class="integrante__rol">{persona.rol}</p>
+                  {persona.bio && <p>{persona.bio}</p>}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <Pendiente campo="integrantes del equipo (nombre, rol, foto y bio)" donde="src/data/nosotras.ts → equipo" />
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="seccion bloque-naranja" aria-labelledby="sigue-titulo">
+    <div class="contenedor sigue">
+      <h2 id="sigue-titulo" class="titulo-xl">¿Y ahora qué?</h2>
+      <div class="sigue__acciones">
+        <a class="boton" href="/biblioteca/">
+          <Icono nombre="library" tamano={18} /> Explore la Biblioteca de juegos
+        </a>
+        <a class="boton boton--claro" href="/sobre-amanadu/manual-de-marca/">
+          <Icono nombre="book-open" tamano={18} /> Vea el manual de marca
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nos-cabecera {
+    padding-block: clamp(2rem, 5vw, 3.5rem) clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .nos-cabecera__grilla {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+  }
+
+  @media (max-width: 860px) {
+    .nos-cabecera__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .nos-cabecera__texto {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+
+  .nos-cabecera__texto > p:not(.lead):not(.antetitulo) {
+    max-width: 52ch;
+  }
+
+  .nos-cabecera__foto {
+    position: relative;
+  }
+
+  .nos-cabecera__foto :global(.foto) {
+    border: 2px solid var(--azul);
+    border-radius: var(--radio) var(--radio) 999px 999px;
+    box-shadow: 10px 10px 0 var(--coral);
+  }
+
+  .nos-cabecera__foto :global(.nos-cabecera__onda) {
+    position: absolute;
+    left: -2rem;
+    top: -1.5rem;
+    z-index: 3;
+    width: 5.5rem;
+  }
+
+  .proposito {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  @media (max-width: 860px) {
+    .proposito {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .proposito > div:first-child {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .proposito__texto {
+    display: grid;
+    gap: 1.25rem;
+    font-size: 1.15rem;
+  }
+
+  .proposito__texto :global(.proposito__eslogan) {
+    margin-top: 1rem;
+    font-family: var(--f-titulo);
+    font-size: var(--t-l);
+    line-height: 1.05;
+  }
+
+  .principios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 1.25rem;
+    list-style: none;
+  }
+
+  .principio {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    transition: transform 0.2s;
+  }
+
+  .principio:nth-child(odd) {
+    transform: rotate(-0.8deg);
+  }
+
+  .principio:nth-child(even) {
+    transform: rotate(0.8deg);
+  }
+
+  .principio:hover {
+    transform: none;
+  }
+
+  .principio h3 {
+    font-size: var(--t-m);
+  }
+
+  .historia {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  @media (max-width: 860px) {
+    .historia {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .historia > div:first-child {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .historia__texto {
+    display: grid;
+    gap: 1.25rem;
+    font-size: 1.1rem;
+  }
+
+  .equipo {
+    list-style: none;
+  }
+
+  .integrante {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .integrante :global(.foto) {
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    margin-bottom: 0.5rem;
+  }
+
+  .integrante h3 {
+    font-size: 1.4rem;
+  }
+
+  .integrante__rol {
+    font-weight: 700;
+    color: var(--verde);
+  }
+
+  .sigue {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .sigue__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+</style>
