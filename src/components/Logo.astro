@@ -1,25 +1,40 @@
 ---
 /**
- * Logo de Amanadu. Usa los archivos oficiales de /public/brand/ cuando existen;
- * mientras tanto muestra un logotipo tipográfico provisional.
+ * Logo oficial de Amanadu.
+ * - tipo «secundario»: horizontal (mascota a la izquierda). Para el encabezado y espacios bajos.
+ * - tipo «principal»: mascota sobre la palabra. Para el pie y espacios amplios.
+ * - fondo «claro» sobre hueso; «color» sobre azul, verde o naranja.
+ * Si un archivo no existe, se muestra un logotipo tipográfico provisional.
  */
 import { site } from '../config/site';
 import { resolverPublico } from '../lib/recursos';
 
 interface Props {
-  variante?: 'principal' | 'claro';
+  tipo?: 'principal' | 'secundario';
+  fondo?: 'claro' | 'color';
   class?: string;
+  /** Carga inmediata (por ejemplo, en el encabezado). */
+  prioridad?: boolean;
 }
 
-const { variante = 'principal', class: clase } = Astro.props;
-const archivo = resolverPublico(site.logo[variante]) ?? (variante === 'claro' ? resolverPublico(site.logo.principal) : null);
+const { tipo = 'secundario', fondo = 'claro', class: clase, prioridad = false } = Astro.props;
+const archivo = resolverPublico(site.logo[tipo][fondo]) ?? resolverPublico(site.logo[tipo].claro);
+const medidas = site.logo[tipo].medidas;
 ---
 
 {
   archivo ? (
-    <img src={archivo} alt={site.logo.alt} class:list={['logo', clase]} width="180" height="56" />
+    <img
+      src={archivo}
+      alt={site.logo.alt}
+      class:list={['logo', `logo--${tipo}`, clase]}
+      width={medidas[0]}
+      height={medidas[1]}
+      loading={prioridad ? 'eager' : 'lazy'}
+      decoding="async"
+    />
   ) : (
-    <span class:list={['logo', 'logo--texto', `logo--${variante}`, clase]}>
+    <span class:list={['logo', 'logo--texto', `logo--fondo-${fondo}`, clase]}>
       <span class="solo-lectores">{site.nombre}</span>
       <span aria-hidden="true">amanadu</span>
     </span>
@@ -44,7 +59,7 @@ const archivo = resolverPublico(site.logo[variante]) ?? (variante === 'claro' ? 
     color: var(--azul);
   }
 
-  .logo--claro {
+  .logo--fondo-color {
     color: var(--hueso);
   }
 </style>

@@ -330,13 +330,15 @@ ol {
     background 0.15s ease;
 }
 
-.boton:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--b-sombra);
+/* El hover cambia la sombra, no la posición: si el botón se moviera bajo el
+   cursor, en el borde entraría y saldría del hover y se vería «saltar». */
+@media (hover: hover) {
+  .boton:hover {
+    box-shadow: 7px 7px 0 var(--b-sombra);
+  }
 }
 
 .boton:active {
-  transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--b-sombra);
 }
 
@@ -367,9 +369,11 @@ ol {
   box-shadow: none;
 }
 
-.boton--fantasma:hover {
-  box-shadow: none;
-  background: color-mix(in srgb, currentColor 10%, transparent);
+@media (hover: hover) {
+  .boton--fantasma:hover {
+    box-shadow: none;
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
 }
 
 .boton--s {
@@ -435,10 +439,12 @@ ol {
   filter: grayscale(1) contrast(1.28) brightness(1.02);
 }
 
+/* La capa de grano mide lo mismo que la foto y se mueve con background-position:
+   así nunca se sale del recuadro (antes se veía un rectángulo gris en algunos equipos). */
 .foto::after {
   content: '';
   position: absolute;
-  inset: -50%;
+  inset: 0;
   z-index: 2;
   pointer-events: none;
   background-image: var(--grano);
@@ -453,11 +459,34 @@ ol {
 }
 
 @keyframes grano {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(-4%, 3%); }
-  50% { transform: translate(3%, -5%); }
-  75% { transform: translate(-2%, -2%); }
-  100% { transform: translate(0, 0); }
+  0% { background-position: 0 0; }
+  25% { background-position: -37px 23px; }
+  50% { background-position: 41px -53px; }
+  75% { background-position: -19px -31px; }
+  100% { background-position: 0 0; }
+}
+
+/* Icono de la categoría en una esquina de la foto */
+.foto__insignia {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 2px solid var(--azul);
+  border-radius: 50%;
+  background: var(--ins-fondo, var(--naranja));
+  color: var(--ins-tinta, var(--azul));
+  box-shadow: 3px 3px 0 var(--azul);
+  pointer-events: none;
+}
+
+.foto__insignia .icono {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 /* Marcador de posición mientras no exista la fotografía real */
@@ -517,15 +546,18 @@ ol {
   background: var(--hueso-claro);
   box-shadow: 6px 6px 0 var(--tinta);
   overflow: hidden;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 
-.tarjeta:has(a.tarjeta__enlace:hover),
+/* La tarjeta no se mueve: así el área para hacer clic queda quieta bajo el cursor. */
+@media (hover: hover) {
+  .tarjeta:has(a.tarjeta__enlace:hover) {
+    box-shadow: 9px 9px 0 var(--naranja);
+  }
+}
+
 .tarjeta:has(a.tarjeta__enlace:focus-visible) {
-  transform: translate(-3px, -3px) rotate(-0.4deg);
-  box-shadow: 9px 9px 0 var(--tinta);
+  box-shadow: 9px 9px 0 var(--naranja);
 }
 
 .tarjeta__enlace::after {
@@ -602,6 +634,7 @@ select.control {
 /* Fichas de opción (radio) */
 .ficha-opcion {
   position: relative;
+  display: inline-flex;
 }
 
 .ficha-opcion input {
@@ -625,12 +658,15 @@ select.control {
   line-height: 1.2;
   transition:
     background 0.15s,
-    color 0.15s,
-    transform 0.15s;
+    color 0.15s;
 }
 
-.ficha-opcion input:hover + span {
-  transform: translateY(-2px);
+/* Solo cambia el color al pasar el mouse: antes la ficha subía 2 px y,
+   en algunos equipos, saltaba en su lugar. */
+@media (hover: hover) {
+  .ficha-opcion input:hover + span {
+    background: color-mix(in srgb, currentColor 14%, transparent);
+  }
 }
 
 .ficha-opcion input:checked + span {
@@ -768,6 +804,21 @@ select.control {
 
 .prosa strong {
   font-weight: 800;
+}
+
+/* ---------- Entrada al hacer scroll ---------- */
+
+.js .revelar {
+  opacity: 0;
+  translate: 0 1.25rem;
+  transition:
+    opacity 0.6s ease var(--retraso, 0ms),
+    translate 0.6s ease var(--retraso, 0ms);
+}
+
+.js .revelar.revelado {
+  opacity: 1;
+  translate: 0 0;
 }
 
 /* ---------- Movimiento reducido ---------- */

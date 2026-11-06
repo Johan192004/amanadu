@@ -1,0 +1,141 @@
+---
+/**
+ * Cabecera de las secciones principales: título grande, una nota a mano
+ * pegada al título y Du acompañado de figuras de la marca.
+ * El contenido que va debajo del título (texto y botones) entra por el slot.
+ */
+import Forma from './Forma.astro';
+import Racimo from './Racimo.astro';
+import type { Expresion } from '../data/du';
+
+interface Props {
+  id: string;
+  antetitulo: string;
+  titulo: string;
+  /** Parte del título que lleva un subrayado dibujado a mano. */
+  subrayar?: string;
+  /** Nota en Mynerve que acompaña al título. */
+  nota?: string;
+  expresion: Expresion;
+  icono?: string;
+  paleta?: 'calida' | 'fria';
+}
+
+const { id, antetitulo, titulo, subrayar, nota, expresion, icono, paleta } = Astro.props;
+const [antes, despues] = subrayar && titulo.includes(subrayar) ? titulo.split(subrayar) : [titulo, undefined];
+---
+
+<section class="cabecera-pagina" aria-labelledby={id}>
+  <div class="contenedor cabecera-pagina__grilla">
+    <div class="cabecera-pagina__texto">
+      <p class="antetitulo">{antetitulo}</p>
+      <div class:list={['cabecera-pagina__titular', { 'cabecera-pagina__titular--subrayado': despues !== undefined }]}>
+        <h1 id={id} class="titulo-mega">
+          {antes}
+          {
+            despues !== undefined && (
+              <>
+                <span class="cabecera-pagina__subrayado">
+                  {subrayar}
+                  <Forma tipo="garabato" estirar class="cabecera-pagina__garabato" color="var(--coral)" />
+                </span>
+                {despues}
+              </>
+            )
+          }
+        </h1>
+        {
+          nota && (
+            <p class="nota cabecera-pagina__nota">
+              <Forma tipo="flecha" class="cabecera-pagina__flecha" color="var(--coral)" />
+              {nota}
+            </p>
+          )
+        }
+      </div>
+      <slot />
+    </div>
+    <Racimo expresion={expresion} icono={icono} paleta={paleta} class="cabecera-pagina__racimo" />
+  </div>
+</section>
+
+<style>
+  .cabecera-pagina {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(3rem, 6vw, 5rem);
+  }
+
+  .cabecera-pagina__grilla {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+
+  .cabecera-pagina__texto {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .cabecera-pagina__titular {
+    display: grid;
+    gap: clamp(0.9rem, 2vw, 1.4rem);
+  }
+
+  .cabecera-pagina__titular--subrayado {
+    gap: clamp(1.6rem, 3.5vw, 2.6rem);
+  }
+
+  .cabecera-pagina__subrayado {
+    position: relative;
+    display: inline-block;
+  }
+
+  .cabecera-pagina :global(.cabecera-pagina__garabato) {
+    position: absolute;
+    left: -2%;
+    bottom: -0.18em;
+    width: 104%;
+    height: 0.24em;
+    overflow: visible;
+  }
+
+  .cabecera-pagina__nota {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-left: clamp(1rem, 6vw, 5rem);
+    transform: rotate(-3deg);
+    transform-origin: left;
+  }
+
+  /* Flecha volteada para que apunte hacia el título */
+  .cabecera-pagina :global(.cabecera-pagina__flecha) {
+    width: 2.8rem;
+    height: 2.8rem;
+    flex: none;
+    margin-top: -1.6rem;
+    transform: scale(-1, -1);
+  }
+
+  @media (max-width: 700px) {
+    .cabecera-pagina__grilla {
+      grid-template-columns: 1fr;
+    }
+
+    /* En celular, Du va arriba y a la derecha, antes del texto, para no taparlo. */
+    .cabecera-pagina :global(.cabecera-pagina__racimo) {
+      order: -1;
+      justify-self: end;
+      width: 7.5rem;
+      margin: -1rem 0 -1.5rem;
+    }
+
+    .cabecera-pagina__nota {
+      margin-left: 0;
+    }
+  }
+</style>

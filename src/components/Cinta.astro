@@ -57,6 +57,11 @@ const { palabras, tono = 'naranja' } = Astro.props;
     flex: none;
   }
 
+  /* Se detiene mientras el cursor está encima, por si alguien quiere leerla con calma. */
+  .cinta:hover .cinta__pista {
+    animation-play-state: paused;
+  }
+
   @keyframes desplazar {
     to {
       transform: translateX(-50%);

@@ -85,6 +85,18 @@ const tipografias = [
   },
 ];
 
+// Variantes oficiales del logo (archivos en /public/brand/).
+const variantesLogo = [
+  { nombre: 'Principal', tipo: 'principal', src: site.logo.principal.claro, fondo: 'claro' },
+  { nombre: 'Principal sobre color', tipo: 'principal', src: site.logo.principal.color, fondo: 'azul' },
+  { nombre: 'Principal, negativo sobre positivo', tipo: 'principal', src: site.logo.principal.negro, fondo: 'blanco' },
+  { nombre: 'Principal, positivo sobre negativo', tipo: 'principal', src: site.logo.principal.blanco, fondo: 'negro' },
+  { nombre: 'Secundario', tipo: 'secundario', src: site.logo.secundario.claro, fondo: 'claro' },
+  { nombre: 'Secundario sobre color', tipo: 'secundario', src: site.logo.secundario.color, fondo: 'azul' },
+  { nombre: 'Secundario, negativo sobre positivo', tipo: 'secundario', src: site.logo.secundario.negro, fondo: 'blanco' },
+  { nombre: 'Secundario, positivo sobre negativo', tipo: 'secundario', src: site.logo.secundario.blanco, fondo: 'negro' },
+];
+
 // Glosario y usos incorrectos del logo (pp. 14 y 17).
 const conceptosLogo = [
   { termino: 'Geometrización', definicion: 'Las figuras que componen nuestro logo.' },
@@ -148,7 +160,7 @@ const estiloFotografico = ['Textura', 'Nostalgia', 'Editorial', 'Espontáneas', 
             </figure>
           ) : (
             <div class="tapa" aria-hidden="true">
-              <Logo variante="claro" class="tapa__logo" />
+              <Logo fondo="color" class="tapa__logo" />
               <p class="tapa__titulo">Manual de marca</p>
               <Forma tipo="estrella" class="tapa__estrella" color="var(--naranja)" />
               <Forma tipo="circulo" class="tapa__circulo" color="var(--coral)" />
@@ -216,10 +228,20 @@ const estiloFotografico = ['Textura', 'Nostalgia', 'Editorial', 'Espontáneas', 
       </ul>
 
       <h2 class="titulo-xl tipos-titulo">Logo</h2>
-      <div class="logos">
-        <div class="logos__caja logos__caja--claro"><Logo /></div>
-        <div class="logos__caja logos__caja--oscuro"><Logo variante="claro" /></div>
-      </div>
+      <p class="logos__intro">
+        Hay dos versiones: el <strong>logo principal</strong>, con Du sobre la palabra, para espacios amplios,
+        y el <strong>logo secundario</strong>, horizontal, para espacios bajos como el encabezado de esta página.
+      </p>
+      <ul class="logos">
+        {
+          variantesLogo.map((v) => (
+            <li class={`logos__caja logos__caja--${v.fondo}`}>
+              <img src={v.src} alt={`Amanadu, ${v.nombre}`} loading="lazy" class={`logos__img logos__img--${v.tipo}`} />
+              <p class="logos__nombre">{v.nombre}</p>
+            </li>
+          ))
+        }
+      </ul>
 
       <div class="logo-reglas">
         <dl class="conceptos">
@@ -588,33 +610,68 @@ const estiloFotografico = ['Textura', 'Nostalgia', 'Editorial', 'Espontáneas', 
     line-height: 1.1;
   }
 
-  .logos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+  .logos__intro {
+    max-width: 62ch;
+    margin-bottom: 1.5rem;
   }
 
-  @media (max-width: 600px) {
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    list-style: none;
+  }
+
+  @media (max-width: 900px) {
     .logos {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
   .logos__caja {
-    --logo-alto: 4rem;
     display: grid;
-    place-items: center;
-    min-height: 14rem;
+    grid-template-rows: 1fr auto;
+    justify-items: center;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 13rem;
+    padding: 1.25rem 1rem 1rem;
     border: 2px solid var(--azul);
     border-radius: var(--radio);
+  }
+
+  .logos__img--principal {
+    width: min(100%, 9rem);
+    height: auto;
+  }
+
+  .logos__img--secundario {
+    width: min(100%, 13rem);
+    height: auto;
+  }
+
+  .logos__nombre {
+    font-size: var(--t-xs);
+    font-weight: 700;
+    text-align: center;
   }
 
   .logos__caja--claro {
     background: var(--hueso-claro);
   }
 
-  .logos__caja--oscuro {
+  .logos__caja--azul {
     background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .logos__caja--blanco {
+    background: #fff;
+  }
+
+  .logos__caja--negro {
+    background: #111;
+    color: #fff;
   }
 
   .logo-reglas {

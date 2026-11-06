@@ -1,0 +1,63 @@
+---
+/**
+ * Du, la mascota de Amanadu, con una de sus expresiones.
+ * Los archivos están en /public/brand/emojis/du-<expresion>.webp
+ */
+import { rutaDu, type Expresion } from '../data/du';
+
+interface Props {
+  expresion: Expresion;
+  /** Ancho en rem. */
+  tamano?: number;
+  /** Si Du comunica algo por sí solo, descríbalo; si es decorativo, déjelo vacío. */
+  etiqueta?: string;
+  /** Flota suavemente. */
+  flotar?: boolean;
+  class?: string;
+}
+
+const { expresion, tamano = 4, etiqueta = '', flotar = false, class: clase } = Astro.props;
+---
+
+<img
+  src={rutaDu(expresion)}
+  alt={etiqueta}
+  aria-hidden={etiqueta ? undefined : 'true'}
+  width="240"
+  height="200"
+  loading="lazy"
+  decoding="async"
+  class:list={['du', { 'du--flotar': flotar }, clase]}
+  style={`--du-ancho: ${tamano}rem`}
+/>
+
+<style>
+  .du {
+    width: var(--du-ancho);
+    height: auto;
+    filter: drop-shadow(3px 4px 0 rgb(2 46 139 / 0.25));
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .du--flotar {
+    animation: du-flotar 5s ease-in-out infinite;
+  }
+
+  @keyframes du-flotar {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--du-giro, -6deg));
+    }
+    50% {
+      transform: translateY(-0.6rem) rotate(calc(var(--du-giro, -6deg) * -1));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .du--flotar {
+      animation: none;
+      transform: rotate(var(--du-giro, -6deg));
+    }
+  }
+</style>

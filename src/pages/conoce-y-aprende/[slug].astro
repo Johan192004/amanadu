@@ -58,8 +58,9 @@ const otros = (await getCollection('articulos'))
         alt={data.imagen.alt}
         proporcion="16 / 8"
         prioridad
-        icono="book-open"
+        icono={linea.icono}
         tono={linea.color}
+        insignia
         class="art-portada"
         sizes="(max-width: 1240px) 100vw, 1240px"
       />

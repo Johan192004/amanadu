@@ -137,6 +137,8 @@ if (herramienta) {
     }
     // Las copias no participan en los filtros del catálogo.
     copia.removeAttribute('data-juego');
+    copia.classList.remove('revelar');
+    copia.style.removeProperty('--retraso');
     copia.hidden = false;
     return copia;
   };

@@ -4,9 +4,11 @@ interface Props {
   tipo: 'estrella' | 'garabato' | 'flecha' | 'circulo' | 'onda' | 'chispa';
   class?: string;
   color?: string;
+  /** Deja que la figura se estire al tamaño de su caja (útil para subrayados). */
+  estirar?: boolean;
 }
 
-const { tipo, class: clase, color = 'currentColor' } = Astro.props;
+const { tipo, class: clase, color = 'currentColor', estirar = false } = Astro.props;
 ---
 
 <svg
@@ -14,6 +16,7 @@ const { tipo, class: clase, color = 'currentColor' } = Astro.props;
   viewBox="0 0 100 100"
   aria-hidden="true"
   focusable="false"
+  preserveAspectRatio={estirar ? 'none' : undefined}
   fill="none"
   style={`color: ${color}`}
 >
@@ -29,9 +32,10 @@ const { tipo, class: clase, color = 'currentColor' } = Astro.props;
     tipo === 'garabato' && (
       <path
         stroke="currentColor"
-        stroke-width="7"
+        stroke-width={estirar ? 9 : 7}
         stroke-linecap="round"
         stroke-linejoin="round"
+        vector-effect={estirar ? 'non-scaling-stroke' : undefined}
         d="M6 62c10-22 20-22 24 0s16 22 22 0 18-22 22 0 14 22 20 0"
       />
     )

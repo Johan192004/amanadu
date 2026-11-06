@@ -1,0 +1,133 @@
+---
+/**
+ * Composición decorativa para las cabeceras: Du en el centro, rodeado de
+ * figuras de la marca que flotan con calma. Es solo decoración.
+ */
+import Du from './Du.astro';
+import type { Expresion } from '../data/du';
+import Forma from './Forma.astro';
+import Icono from './Icono.astro';
+
+interface Props {
+  expresion: Expresion;
+  /** Icono de la burbuja que acompaña a Du (por ejemplo, 'dices' o 'book-open'). */
+  icono?: string;
+  /** Combinación de colores de las figuras. */
+  paleta?: 'calida' | 'fria';
+  class?: string;
+}
+
+const { expresion, icono = 'dices', paleta = 'calida', class: clase } = Astro.props;
+const [c1, c2, c3] =
+  paleta === 'calida' ? ['var(--naranja)', 'var(--coral)', 'var(--azul)'] : ['var(--azul)', 'var(--naranja)', 'var(--verde)'];
+---
+
+<div class:list={['racimo', clase]} aria-hidden="true">
+  <Forma tipo="circulo" class="racimo__circulo" color={c1} />
+  <Forma tipo="onda" class="racimo__onda" color={c2} />
+  <Forma tipo="estrella" class="racimo__estrella" color={c3} />
+  <Forma tipo="chispa" class="racimo__chispa" color={c2} />
+  <span class="racimo__burbuja" style={`background: ${c3}`}>
+    <Icono nombre={icono} tamano={26} />
+  </span>
+  <Du expresion={expresion} tamano={8.5} flotar class="racimo__du" />
+</div>
+
+<style>
+  .racimo {
+    position: relative;
+    width: 17rem;
+    aspect-ratio: 1;
+    flex: none;
+  }
+
+  .racimo > :global(*) {
+    position: absolute;
+  }
+
+  .racimo :global(.racimo__circulo) {
+    inset: 14% 12% 10% 14%;
+    width: 74%;
+    opacity: 0.95;
+  }
+
+  .racimo :global(.racimo__onda) {
+    right: 2%;
+    top: 4%;
+    width: 30%;
+    animation: racimo-girar 26s linear infinite;
+  }
+
+  .racimo :global(.racimo__estrella) {
+    left: 0;
+    top: 10%;
+    width: 22%;
+    animation: racimo-latir 3.2s ease-in-out infinite;
+  }
+
+  .racimo :global(.racimo__chispa) {
+    left: 6%;
+    bottom: 4%;
+    width: 18%;
+    animation: racimo-girar 14s linear infinite reverse;
+  }
+
+  .racimo__burbuja {
+    right: 4%;
+    bottom: 10%;
+    display: grid;
+    place-items: center;
+    width: 3.4rem;
+    height: 3.4rem;
+    border: 2px solid var(--azul);
+    border-radius: 50%;
+    color: var(--hueso);
+    box-shadow: 3px 3px 0 var(--azul);
+    animation: racimo-flotar 4.2s ease-in-out infinite;
+    animation-delay: -1.5s;
+  }
+
+  .racimo :global(.racimo__du) {
+    left: 50%;
+    top: 50%;
+    width: 52%;
+    margin: -26% 0 0 -26%;
+  }
+
+  @keyframes racimo-girar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes racimo-latir {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.15) rotate(12deg);
+    }
+  }
+
+  @keyframes racimo-flotar {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.5rem);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .racimo {
+      width: 11rem;
+    }
+
+    .racimo__burbuja {
+      width: 2.6rem;
+      height: 2.6rem;
+    }
+  }
+</style>

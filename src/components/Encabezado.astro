@@ -10,8 +10,8 @@ const activo = (href: string) => (href === '/' ? ruta === '/' : ruta.startsWith(
 <header class="encabezado" data-encabezado>
   <div class="contenedor encabezado__barra">
     <a href="/" class="encabezado__logo" aria-label="Amanadu, ir al inicio">
-      <Logo class="encabezado__logo-principal" />
-      <Logo variante="claro" class="encabezado__logo-claro" />
+      <Logo prioridad class="encabezado__logo-principal" />
+      <Logo fondo="color" class="encabezado__logo-claro" />
     </a>
 
     <button
@@ -73,14 +73,20 @@ const activo = (href: string) => (href === '/' ? ruta === '/' : ruta.startsWith(
   }
 
   .encabezado__logo {
-    --logo-alto: 2.4rem;
+    --logo-alto: 2.6rem;
     display: inline-flex;
     text-decoration: none;
+  }
+
+  /* Gira la imagen, no el enlace: así el área para hacer clic no se mueve bajo el cursor. */
+  .encabezado__logo :global(.logo) {
     transition: transform 0.2s;
   }
 
-  .encabezado__logo:hover {
-    transform: rotate(-3deg);
+  @media (hover: hover) {
+    .encabezado__logo:hover :global(.logo) {
+      transform: rotate(-3deg);
+    }
   }
 
   .encabezado__logo :global(.encabezado__logo-claro),

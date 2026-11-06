@@ -2,7 +2,8 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Icono from '../../components/Icono.astro';
-import Forma from '../../components/Forma.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import Du from '../../components/Du.astro';
 import TarjetaJuego from '../../components/TarjetaJuego.astro';
 import PreguntasQueJugamos from '../../components/PreguntasQueJugamos.astro';
 import {
@@ -23,23 +24,22 @@ const frasesPlanes = Object.fromEntries(Object.entries(planes).map(([id, p]) => 
   descripcion="Juegos tradicionales colombianos, de mesa, de cartas, de palabras y de lógica, con instrucciones paso a paso. Encuentre a qué jugar hoy según su tiempo y su compañía."
 >
   <!-- Cabecera -->
-  <section class="cabecera-biblio" aria-labelledby="biblio-titulo">
-    <div class="contenedor">
-      <p class="antetitulo">{juegos.length} juegos para descubrir</p>
-      <h1 id="biblio-titulo" class="titulo-mega">Biblioteca de juegos</h1>
-      <div class="cabecera-biblio__pie">
-        <p class="lead">
-          Juegos de siempre y de ahora, con instrucciones claras para que solo tenga que preocuparse por pasarla bien.
-        </p>
-        <p class="nota cabecera-biblio__nota">no hay que jugarlos todos ;)</p>
-      </div>
-      <nav class="atajos" aria-label="Ir a">
-        <a class="boton" href="#que-jugamos-hoy"><Icono nombre="dices" tamano={18} /> ¿A qué jugamos hoy?</a>
-        <a class="boton boton--claro" href="#catalogo"><Icono nombre="library" tamano={18} /> Ver el catálogo</a>
-      </nav>
-    </div>
-    <Forma tipo="chispa" class="cabecera-biblio__chispa" color="var(--naranja)" />
-  </section>
+  <CabeceraPagina
+    id="biblio-titulo"
+    antetitulo={`${juegos.length} juegos para descubrir`}
+    titulo="Biblioteca de juegos"
+    nota="no hay que jugarlos todos ;)"
+    expresion="emocionado"
+    icono="dices"
+  >
+    <p class="lead">
+      Juegos de siempre y de ahora, con instrucciones claras para que solo tenga que preocuparse por pasarla bien.
+    </p>
+    <nav class="atajos" aria-label="Ir a">
+      <a class="boton" href="#que-jugamos-hoy"><Icono nombre="dices" tamano={18} /> ¿A qué jugamos hoy?</a>
+      <a class="boton boton--claro" href="#catalogo"><Icono nombre="library" tamano={18} /> Ver el catálogo</a>
+    </nav>
+  </CabeceraPagina>
 
   <!-- Herramienta -->
   <section
@@ -83,18 +83,20 @@ const frasesPlanes = Object.fromEntries(Object.entries(planes).map(([id, p]) => 
 
       <div class="resultados" data-resultados hidden aria-live="polite">
         <p class="cargando" data-cargando>
+          <Du expresion="mareado" tamano={3.5} class="resultados__du-cargando" />
           <span class="cargando__puntos" aria-hidden="true"><i></i><i></i><i></i></span>
           Buscando juegos para usted…
         </p>
 
         <h3 class="resultados__titulo titulo-l" data-resultados-titulo tabindex="-1" hidden></h3>
-        <p class="resultados__resumen" data-resultados-resumen hidden>
-          Escoja el que le provoque. Y si ninguno le convence, cambie sus respuestas: no hay respuesta incorrecta.
-        </p>
+        <div class="resultados__resumen" data-resultados-resumen hidden>
+          <Du expresion="feliz" tamano={4} />
+          <p>Escoja el que le provoque. Y si ninguno le convence, cambie sus respuestas: no hay respuesta incorrecta.</p>
+        </div>
         <div class="grilla grilla--3 resultados__grilla" data-resultados-grilla></div>
 
         <div class="estado-vacio resultados__vacio" data-resultados-vacio hidden>
-          <Icono nombre="puzzle" tamano={36} />
+          <Du expresion="llorando" tamano={5} />
           <p>
             No encontramos un juego que cumpla todas sus respuestas a la vez. Pruebe a dejar alguna pregunta sin
             responder o a cambiar el lugar o el tiempo.
@@ -220,41 +222,11 @@ const frasesPlanes = Object.fromEntries(Object.entries(planes).map(([id, p]) => 
 </script>
 
 <style>
-  .cabecera-biblio {
-    position: relative;
-    overflow: hidden;
-    padding-block: clamp(3rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem);
-  }
-
-  .cabecera-biblio .contenedor {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .cabecera-biblio__pie {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: end;
-    justify-content: space-between;
-    gap: 1rem 2rem;
-  }
-
-  .cabecera-biblio__nota {
-    transform: rotate(-4deg);
-  }
-
   .atajos {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 0.5rem;
-  }
-
-  .cabecera-biblio :global(.cabecera-biblio__chispa) {
-    position: absolute;
-    right: clamp(-2rem, 3vw, 4rem);
-    top: 2rem;
-    width: clamp(4rem, 10vw, 8rem);
   }
 
   /* Herramienta */
@@ -294,8 +266,25 @@ const frasesPlanes = Object.fromEntries(Object.entries(planes).map(([id, p]) => 
   }
 
   .resultados__resumen {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     margin: 0.75rem 0 2rem;
-    max-width: 60ch;
+    max-width: 66ch;
+  }
+
+  .resultados__resumen :global(.du) {
+    flex: none;
+  }
+
+  .resultados :global(.resultados__du-cargando) {
+    animation: girar-du 2.4s linear infinite;
+  }
+
+  @keyframes girar-du {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .resultados__vacio {

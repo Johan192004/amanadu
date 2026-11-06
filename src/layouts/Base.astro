@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { titulo, descripcion = site.descripcion, imagen } = Astro.props;
-const tituloCompleto = titulo ? `${titulo} · ${site.nombre}` : `${site.nombre} · Hay que jugar, hay que reír y hay que divertirse`;
+const tituloCompleto = titulo ? `${titulo} · ${site.nombre}` : `${site.nombre} · Hay que jugar, hay que crear y hay que divertirse`;
 const canonica = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const imagenSocial = imagen && Astro.site ? new URL(imagen, Astro.site).href : undefined;
 ---
@@ -24,7 +24,9 @@ const imagenSocial = imagen && Astro.site ? new URL(imagen, Astro.site).href : u
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
     <meta name="theme-color" content="#022E8B" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48" />
+    <link rel="icon" href="/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {canonica && <link rel="canonical" href={canonica} />}
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_CO" />
@@ -32,6 +34,10 @@ const imagenSocial = imagen && Astro.site ? new URL(imagen, Astro.site).href : u
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
     {imagenSocial && <meta property="og:image" content={imagenSocial} />}
+    <script is:inline>
+      // Marca que hay JavaScript antes de pintar, para que las animaciones de entrada no parpadeen.
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body id="inicio">
     <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -42,6 +48,47 @@ const imagenSocial = imagen && Astro.site ? new URL(imagen, Astro.site).href : u
     <Pie />
   </body>
 </html>
+
+<script>
+  // Entrada suave de los bloques al llegar a ellos con el scroll.
+  const selector = [
+    'main .cabecera-seccion',
+    'main .grilla > *',
+    'main .pilar',
+    'main .principio',
+    'main .mv',
+    'main .origen > *',
+    'main .colores > *',
+    'main .tipo',
+    'main .variante',
+    'main .logos > *',
+  ].join(',');
+
+  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const elementos = [...document.querySelectorAll<HTMLElement>(selector)];
+
+  if (!reducido && 'IntersectionObserver' in window) {
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        for (const entrada of entradas) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add('revelado');
+            observador.unobserve(entrada.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px' },
+    );
+
+    elementos.forEach((el) => {
+      // Escalona los elementos hermanos para que entren uno tras otro.
+      const indice = [...(el.parentElement?.children ?? [])].indexOf(el);
+      el.style.setProperty('--retraso', `${Math.min(indice, 5) * 70}ms`);
+      el.classList.add('revelar');
+      observador.observe(el);
+    });
+  }
+</script>
 
 <style>
   main:focus {

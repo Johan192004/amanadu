@@ -442,3 +442,55 @@ Fotografía editorial documental en blanco y negro, grano analógico de películ
 Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: Primer plano de un tejo metálico en una mano, con el bocín y las mechas desenfocados al fondo. Formato 3:2.
 ```
 
+## Artículos nuevos (4 fotos pendientes)
+
+Mientras no existan, estos artículos muestran el bloque gráfico de la marca con el icono de su línea temática.
+
+### Juegos para romper el hielo (portada)
+
+- **Archivo:** `public/images/articulos/juegos-para-romper-el-hielo.jpg`
+- **Proporción:** 16:9
+- **Prompt:**
+
+```text
+Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: Grupo de personas que apenas se conocen riendo en una sala mientras una de ellas hace mímica. Formato 16:9.
+```
+
+### Invente su propio juego de mesa en una tarde (portada)
+
+- **Archivo:** `public/images/articulos/invente-su-propio-juego-de-mesa.jpg`
+- **Proporción:** 16:9
+- **Prompt:**
+
+```text
+Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: Mesa con un tablero dibujado a mano en cartón, tapas de gaseosa como fichas, un dado y marcadores. Formato 16:9.
+```
+
+### Ocio: la palabra que dio origen a «escuela» (portada)
+
+- **Archivo:** `public/images/articulos/ocio-la-palabra-que-dio-origen-a-escuela.jpg`
+- **Proporción:** 16:9
+- **Prompt:**
+
+```text
+Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: Persona leyendo tranquila en una banca de un parque, con un libro abierto y la tarde cayendo. Formato 16:9.
+```
+
+### Juegos de la calle: lo que se jugaba en el barrio (portada)
+
+- **Archivo:** `public/images/articulos/juegos-de-la-calle.jpg`
+- **Proporción:** 16:9
+- **Prompt:**
+
+```text
+Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: Personas jugando golosa en una calle de barrio, con los cuadros pintados con tiza en el pavimento. Formato 16:9.
+```
+
+## Fotos para revisar
+
+- `public/images/juegos/damas.jpg` y `public/images/juegos/crucigramas.jpg` traen un marco blanco con una línea negra. Recórtelo o genérelas de nuevo.
+- `public/images/articulos/tejo-tradicion-que-revienta-2.jpg` muestra una diana con red, que no corresponde a una cancha de tejo. Prompt sugerido:
+
+```text
+Fotografía editorial documental en blanco y negro, grano analógico de película visible (estilo Kodak Tri-X 400 forzada), contraste alto con negros profundos y blancos limpios, luz natural, encuadre espontáneo y ligeramente imperfecto, personas reales colombianas de entre 20 y 45 años con gestos genuinos, ambiente cotidiano en Colombia. Sin texto, sin logotipos ni marcas comerciales visibles, sin marcas de agua, sin estética de foto de stock ni de publicidad corporativa. Escena: primer plano de una mano sosteniendo un tejo (disco metálico pesado y redondeado) en una cancha de tejo colombiana; al fondo, desenfocado, el tablero de madera inclinado y relleno de greda húmeda, con un aro metálico (bocín) incrustado en el centro y pequeños triángulos de papel blanco (mechas) sobre el aro. Sin dianas, sin redes, sin tableros de dardos. Formato 3:2.
+```

@@ -2,11 +2,13 @@
 import Base from '../layouts/Base.astro';
 import Icono from '../components/Icono.astro';
 import Forma from '../components/Forma.astro';
+import Du from '../components/Du.astro';
 ---
 
 <Base titulo="Página no encontrada">
   <section class="seccion perdida">
     <div class="contenedor perdida__contenido">
+      <Du expresion="mareado" tamano={7} flotar />
       <p class="nota">¡uy! esta ficha se salió del tablero</p>
       <h1 class="titulo-mega">Página no encontrada</h1>
       <p class="lead">La página que busca no existe o cambió de lugar. No se preocupe: aquí perderse también es parte del juego.</p>

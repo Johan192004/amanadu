@@ -24,7 +24,7 @@ const anio = new Date().getFullYear();
 
     <div class="pie__columnas">
       <div class="pie__marca">
-        <Logo variante="claro" />
+        <Logo tipo="principal" fondo="color" class="pie__logo" />
         <p>Un lugar para recuperar el juego, la risa y el tiempo libre. Sin afán y sin culpa.</p>
         {
           site.redes.length > 0 && (
@@ -102,7 +102,7 @@ const anio = new Date().getFullYear();
 
     <div class="pie__base">
       <p>© {anio} {site.nombre}</p>
-      <p class="nota">Hoy también vale la pena jugar.</p>
+      <Eslogan class="nota pie__eslogan-nota" />
       <a href="#inicio" class="pie__arriba">Volver arriba <Icono nombre="arrow-down" tamano={16} class="pie__arriba-icono" /></a>
     </div>
   </div>
@@ -167,7 +167,7 @@ const anio = new Date().getFullYear();
   }
 
   .pie__marca {
-    --logo-alto: 3rem;
+    --logo-alto: clamp(6.5rem, 12vw, 8.5rem);
     display: grid;
     gap: 1rem;
     align-content: start;

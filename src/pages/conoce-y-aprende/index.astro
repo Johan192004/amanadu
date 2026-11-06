@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Forma from '../../components/Forma.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
 import TarjetaArticulo from '../../components/TarjetaArticulo.astro';
 import { lineas } from '../../data/taxonomia';
 
@@ -15,17 +15,20 @@ const conteo = (linea: string) => articulos.filter((a) => a.data.linea === linea
   titulo="Conoce y aprende"
   descripcion="Artículos sobre juego, cultura, tradición colombiana, creatividad, tiempo libre y el valor de hacer una pausa."
 >
-  <section class="cabecera-aprende" aria-labelledby="aprende-titulo">
-    <div class="contenedor">
-      <p class="antetitulo">Ideas, historias y cultura del juego</p>
-      <h1 id="aprende-titulo" class="titulo-mega">Conoce y aprende</h1>
-      <p class="lead">
-        Lecturas cortas sobre por qué jugamos, de dónde vienen nuestros juegos y por qué el tiempo libre también merece
-        un lugar en el día.
-      </p>
-    </div>
-    <Forma tipo="garabato" class="cabecera-aprende__garabato" color="var(--coral)" />
-  </section>
+  <CabeceraPagina
+    id="aprende-titulo"
+    antetitulo="Ideas, historias y cultura del juego"
+    titulo="Conoce y aprende"
+    subrayar="aprende"
+    nota="lecturas cortas, sin afán"
+    expresion="curioso"
+    icono="book-open"
+    paleta="fria"
+  >
+    <p class="lead">
+      Por qué jugamos, de dónde vienen nuestros juegos y por qué el tiempo libre también merece un lugar en el día.
+    </p>
+  </CabeceraPagina>
 
   <section class="seccion seccion--sin-arriba" aria-label="Artículos">
     <div class="contenedor">
@@ -104,24 +107,6 @@ const conteo = (linea: string) => articulos.filter((a) => a.data.linea === linea
 </script>
 
 <style>
-  .cabecera-aprende {
-    position: relative;
-    overflow: hidden;
-    padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem);
-  }
-
-  .cabecera-aprende .contenedor {
-    display: grid;
-    gap: 1.5rem;
-  }
-
-  .cabecera-aprende :global(.cabecera-aprende__garabato) {
-    position: absolute;
-    right: 4%;
-    bottom: 1rem;
-    width: clamp(6rem, 16vw, 13rem);
-  }
-
   .seccion--sin-arriba {
     padding-top: 0;
   }
@@ -157,14 +142,13 @@ const conteo = (linea: string) => articulos.filter((a) => a.data.linea === linea
     color: var(--azul);
     text-align: left;
     cursor: pointer;
-    transition:
-      transform 0.15s,
-      box-shadow 0.15s;
+    transition: box-shadow 0.15s;
   }
 
-  .linea-boton:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 4px 4px 0 var(--azul);
+  @media (hover: hover) {
+    .linea-boton:hover {
+      box-shadow: 4px 4px 0 var(--azul);
+    }
   }
 
   .linea-boton[aria-pressed='true'] {

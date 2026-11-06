@@ -76,21 +76,25 @@ export const lineas = {
     etiqueta: 'El juego y nosotros',
     descripcion: 'Interacción, vínculos, socialización y experiencias compartidas.',
     color: 'naranja',
+    icono: 'users',
   },
   'crear-para-explorar': {
     etiqueta: 'Crear para explorar',
     descripcion: 'Creatividad, imaginación y nuevas maneras de jugar.',
     color: 'coral',
+    icono: 'palette',
   },
   'el-valor-de-hacer-una-pausa': {
     etiqueta: 'El valor de hacer una pausa',
     descripcion: 'Bienestar, descanso, tiempo libre y la presión de estar siempre produciendo.',
     color: 'verde',
+    icono: 'leaf',
   },
   'juegos-cultura-y-tradicion': {
     etiqueta: 'Juegos, cultura y tradición',
     descripcion: 'Historia de los juegos, juegos tradicionales colombianos y otras expresiones culturales.',
     color: 'azul',
+    icono: 'flag',
   },
 } as const;
 

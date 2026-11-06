@@ -2,18 +2,32 @@
 
 ## Logos
 
-Copie los archivos oficiales en `public/brand/`:
+Los logos oficiales están en `public/brand/` (PNG con fondo transparente, ya recortados y reducidos para la web):
 
-| Archivo | Uso |
+| Archivo | Uso en el sitio |
 | --- | --- |
-| `logo-amanadu.svg` | Versión para fondos claros (hueso). Encabezado y manual. |
-| `logo-amanadu-claro.svg` | Versión para fondos oscuros (azul, verde). Pie de página, menú móvil y portada del manual. |
+| `logo-secundario.png` | Horizontal. Encabezado de todas las páginas. |
+| `logo-secundario-sobre-color.png` | Encabezado con el menú móvil abierto (fondo azul). |
+| `logo-principal.png` | Du sobre la palabra. Página del manual. |
+| `logo-principal-sobre-color.png` | Pie de página azul. |
+| `*-negro.png` y `*-blanco.png` | Versiones negativo y positivo, mostradas en el manual. |
 
-Puede usar `.svg` (recomendado), `.png` o `.webp`. Si prefiere otros nombres, cámbielos en `src/config/site.ts` → `logo`. Si solo existe la versión principal, también se usará sobre fondos oscuros.
+Para cambiarlos, sobrescriba el archivo con el mismo nombre. Las rutas están en `src/config/site.ts` → `logo`. Los originales en alta resolución quedaron en `originales/`, fuera de git.
 
-Mientras no existan, el sitio muestra la palabra «amanadu» en Erica One como logotipo provisional.
+El favicon (`public/favicon-48.png`, `favicon-512.png` y `apple-touch-icon.png`) es la cara de Du, recortada del logo principal.
 
-La altura del logo se controla con la variable CSS `--logo-alto` (encabezado: `2.4rem`; pie: `3rem`). Ajústela si el logo oficial necesita más área de seguridad.
+## Emojis de Du
+
+Las 15 expresiones de Du están en `public/brand/emojis/du-<expresión>.webp`, con el fondo blanco eliminado. Se usan con el componente `Du` (`src/components/Du.astro`), por ejemplo `<Du expresion="feliz" />`.
+
+Expresiones disponibles: aburrido, apenado, asombro, bravo, carcajada, curioso, dudoso, emocionado, enamorado, feliz, impactado, llorando, mareado, ojos-en-blanco y sorprendido.
+
+Dónde aparece Du hoy:
+
+- **Inicio:** riéndose junto a la foto de portada y tranquilo en el bloque de pausa.
+- **Biblioteca y Conoce y aprende:** en la cabecera, con figuras de la marca.
+- **«¿A qué jugamos hoy?»:** mareado mientras busca, feliz cuando hay resultados y llorando cuando no hay coincidencias.
+- **Página 404:** mareado.
 
 ## Tipografías
 

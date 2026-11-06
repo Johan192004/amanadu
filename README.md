@@ -1,6 +1,6 @@
 # Amanadu · sitio web
 
-**«Hay que jugar, hay que reír y hay que divertirse».**
+**«Hay que jugar, hay que crear y hay que divertirse».**
 
 Sitio de Amanadu construido con [Astro](https://astro.build): genera páginas estáticas, rápidas y fáciles de desplegar en Vercel, Netlify o cualquier hosting estático.
 
@@ -34,7 +34,7 @@ src/
   data/pilares.ts         Pilares de la marca (Inicio y Nosotras)
   data/nosotras.ts        Textos, historia y equipo de «Nosotras»
   content/juegos/*.md     Una ficha por juego (29)
-  content/articulos/*.md  Un artículo por archivo (7)
+  content/articulos/*.md  Un artículo por archivo (11)
   components/             Componentes reutilizables (Foto, TarjetaJuego, Logo…)
   pages/                  Páginas del sitio
   scripts/biblioteca.ts   Filtros y herramienta «¿A qué jugamos hoy?»
@@ -88,9 +88,9 @@ Todas las fotos se reemplazan subiendo un archivo a `public/images/` con el nomb
 
 ## Pendientes antes de publicar
 
-- [ ] Logos oficiales en `public/brand/` (hoy se ve un logotipo tipográfico provisional).
+- [x] Logos oficiales y emojis de Du en `public/brand/` (ver `docs/recursos-de-marca.md`).
 - [x] Manual de marca en `public/manual/manual-de-marca-amanadu.pdf` (versión optimizada; el original está en `originales/`, fuera de git).
-- [x] Fotografías (ver `docs/fotografias.md`), incluida la de «Nosotras».
+- [ ] Fotos de los 4 artículos nuevos y 3 fotos por revisar (ver el final de `docs/fotografias.md`).
 - [x] Propósito, misión, visión y origen del nombre (tomados del manual de marca).
 - [ ] Equipo en `src/data/nosotras.ts`.
 - [x] Instagram en `src/config/site.ts`. Falta el correo, si lo hay.

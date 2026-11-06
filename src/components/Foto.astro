@@ -21,6 +21,11 @@ interface Props {
   tono?: 'azul' | 'naranja' | 'coral' | 'verde';
   /** Desactiva el blanco y negro (útil para material gráfico de marca). */
   aColor?: boolean;
+  /**
+   * Muestra el icono en una esquina de la foto (cuando la foto existe).
+   * Mientras no hay foto, el icono ya se ve grande en el centro.
+   */
+  insignia?: boolean;
   sizes?: string;
   class?: string;
 }
@@ -33,6 +38,7 @@ const {
   icono = 'image',
   tono = 'azul',
   aColor = false,
+  insignia = false,
   sizes,
   class: clase,
 } = Astro.props;
@@ -64,6 +70,13 @@ const estilo = [
         decoding="async"
         sizes={sizes}
       />
+      {
+        insignia && (
+          <span class="foto__insignia" style={`--ins-fondo: ${fondo}; --ins-tinta: ${tinta}`} aria-hidden="true">
+            <Icono nombre={icono} tamano={20} />
+          </span>
+        )
+      }
     </figure>
   ) : (
     <figure class:list={['foto', 'foto--vacia', clase]} style={estilo} role="img" aria-label={alt}>

@@ -22,8 +22,9 @@ const linea = lineas[data.linea];
     src={data.imagen.src}
     alt={data.imagen.alt}
     proporcion={grande ? undefined : '3 / 2'}
-    icono="book-open"
+    icono={linea.icono}
     tono={linea.color}
+    insignia
     class="tarjeta-articulo__foto"
     sizes={grande ? '(max-width: 800px) 100vw, 640px' : '(max-width: 700px) 100vw, 400px'}
   />
