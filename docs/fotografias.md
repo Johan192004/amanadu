@@ -42,8 +42,8 @@ Fotografía editorial documental en blanco y negro, grano analógico de películ
 ### Nosotras
 
 - **Archivo:** `public/images/sobre/nosotras.jpg`
-- **Proporción:** 4:5
-- **Recomendado:** fotografía real del equipo de Amanadu jugando o conversando. Ajuste el texto alternativo en `src/data/nosotras.ts`.
+- **Proporción:** 3:2 (horizontal)
+- **Estado:** lista. Es una fotografía real del equipo. Si la cambia, ajuste el texto alternativo en `src/data/nosotras.ts`.
 
 ## Biblioteca de juegos (29 fotos)
 

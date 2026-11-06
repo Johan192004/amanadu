@@ -89,8 +89,8 @@ Todas las fotos se reemplazan subiendo un archivo a `public/images/` con el nomb
 ## Pendientes antes de publicar
 
 - [ ] Logos oficiales en `public/brand/` (hoy se ve un logotipo tipográfico provisional).
-- [ ] Manual de marca en `public/manual/manual-de-marca-amanadu.pdf`.
-- [ ] Fotografías (ver `docs/fotografias.md`).
+- [x] Manual de marca en `public/manual/manual-de-marca-amanadu.pdf` (versión optimizada; el original está en `originales/`, fuera de git).
+- [x] Fotografías (ver `docs/fotografias.md`), incluida la de «Nosotras».
 - [ ] Historia y equipo en `src/data/nosotras.ts`.
 - [ ] Redes y correo en `src/config/site.ts`.
 - [ ] Revisión editorial de las fuentes de los artículos.

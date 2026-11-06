@@ -51,4 +51,18 @@ Están definidos una sola vez en `src/styles/global.css` (`:root`): `--naranja`,
 
 ## Manual de marca (PDF)
 
-Guarde el archivo como `public/manual/manual-de-marca-amanadu.pdf`. Para reemplazarlo, sobrescriba el archivo con el mismo nombre. Con el PDF en su lugar aparecen el visor integrado y los botones «Descargar» y «Abrir» en la página del manual y el enlace de descarga en el pie de página. Sin el PDF, la página muestra un mensaje de «disponible muy pronto».
+El sitio usa `public/manual/manual-de-marca-amanadu.pdf`. Con el PDF en su lugar aparecen el visor integrado, los botones «Descargar» y «Abrir» y el enlace de descarga en el pie de página. Sin el PDF, la página muestra un mensaje de «disponible muy pronto».
+
+La imagen de la cabecera de la página es `public/manual/portada.jpg`: la primera página del manual exportada como JPG (unos 1500 px de ancho). Si cambia la portada del manual, reemplace también esta imagen. Si la borra, se muestra una tapa gráfica provisional.
+
+### Mantener el PDF liviano
+
+El manual original pesaba 87,5 MB. Casi todo ese peso era la copia editable que Illustrator guarda dentro del PDF y que no se ve en pantalla. La versión web pesa unos 5 MB y se ve igual. El original quedó en `originales/`, una carpeta que git ignora.
+
+Para que el próximo PDF salga liviano desde Illustrator:
+
+1. **Archivo → Guardar como → Adobe PDF**.
+2. Desmarque **«Conservar las capacidades de edición de Illustrator»**.
+3. En **Compresión**, reduzca las imágenes a unos **150 ppp**.
+
+Procure que el archivo final pese menos de 10 MB: el visor lo descarga completo cada vez que alguien abre la página.

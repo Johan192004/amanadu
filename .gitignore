@@ -16,3 +16,6 @@ npm-debug.log*
 # sistema
 .DS_Store
 Thumbs.db
+
+# originales pesados (el sitio usa versiones optimizadas en /public)
+originales/

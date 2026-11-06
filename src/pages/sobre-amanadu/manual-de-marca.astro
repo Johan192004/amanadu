@@ -9,6 +9,7 @@ import { site } from '../../config/site';
 import { resolverPublico } from '../../lib/recursos';
 
 const pdf = resolverPublico(site.manual.pdf);
+const portada = resolverPublico(site.manual.portada);
 
 const colores = [
   { nombre: 'Naranja', hex: '#FF702E', clase: 'naranja' },
@@ -52,13 +53,28 @@ const tipografias = [
           )
         }
       </div>
-      <div class="portada-manual__tapa" aria-hidden="true">
-        <div class="tapa">
-          <Logo variante="claro" class="tapa__logo" />
-          <p class="tapa__titulo">Manual de marca</p>
-          <Forma tipo="estrella" class="tapa__estrella" color="var(--naranja)" />
-          <Forma tipo="circulo" class="tapa__circulo" color="var(--coral)" />
-        </div>
+      <div class="portada-manual__tapa">
+        {
+          portada ? (
+            <figure class="tapa-real">
+              <img
+                src={portada}
+                alt="Portada del manual de marca: la mascota de Amanadu guiñando un ojo sobre el nombre Amanadu, rodeada de ondas naranja, coral y hueso."
+                width="1521"
+                height="1075"
+                fetchpriority="high"
+              />
+              <Forma tipo="estrella" class="tapa-real__estrella" color="var(--naranja)" />
+            </figure>
+          ) : (
+            <div class="tapa" aria-hidden="true">
+              <Logo variante="claro" class="tapa__logo" />
+              <p class="tapa__titulo">Manual de marca</p>
+              <Forma tipo="estrella" class="tapa__estrella" color="var(--naranja)" />
+              <Forma tipo="circulo" class="tapa__circulo" color="var(--coral)" />
+            </div>
+          )
+        }
       </div>
     </div>
   </section>
@@ -192,7 +208,7 @@ const tipografias = [
 
   .portada-manual__grilla {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1fr 1fr;
     gap: clamp(2rem, 6vw, 5rem);
     align-items: center;
   }
@@ -214,6 +230,34 @@ const tipografias = [
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+  }
+
+  .tapa-real {
+    position: relative;
+    margin: 0;
+    transform: rotate(2.5deg);
+  }
+
+  .tapa-real img {
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--hueso);
+    border-radius: var(--radio);
+    box-shadow: 14px 14px 0 var(--naranja);
+  }
+
+  .tapa-real :global(.tapa-real__estrella) {
+    position: absolute;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    width: 4.5rem;
+    animation: girar-tapa 18s linear infinite;
+  }
+
+  @keyframes girar-tapa {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .tapa {

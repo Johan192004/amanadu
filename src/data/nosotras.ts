@@ -15,7 +15,7 @@ export interface Integrante {
 export const nosotras = {
   fotoPrincipal: {
     src: '/images/sobre/nosotras.jpg',
-    alt: 'Integrantes de Amanadu jugando y riendo alrededor de una mesa.',
+    alt: 'Dos integrantes de Amanadu sentadas en un puf, abrazadas y sonriendo, con camisetas blancas con el logo de Amanadu, frente a una biblioteca roja.',
   },
 
   /** Quiénes somos. Texto basado en la identidad de la marca; ajústelo con sus palabras. */

@@ -28,6 +28,8 @@ export const site = {
   manual: {
     pdf: '/manual/manual-de-marca-amanadu.pdf',
     nombreDescarga: 'Manual-de-marca-Amanadu.pdf',
+    /** Imagen de la primera página del manual, usada como portada en la web. */
+    portada: '/manual/portada.jpg',
   },
 
   /**
