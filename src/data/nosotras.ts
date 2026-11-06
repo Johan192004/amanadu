@@ -16,9 +16,9 @@ export interface Integrante {
 export const nosotras = {
   fotoPrincipal: {
     src: '/images/sobre/nosotras.jpg',
-    alt: 'Camila y Salomé, de Amanadu, sentadas en un puf, abrazadas y sonriendo, con camisetas blancas con el logo de Amanadu, frente a una biblioteca.',
+    alt: 'Salomé y Camila, de Amanadu, sentadas en un puf, abrazadas y sonriendo, con camisetas blancas con el logo de Amanadu, frente a una biblioteca.',
     /** Nombres que aparecen como etiqueta sobre la foto. */
-    pie: 'Camila y Salomé',
+    pie: 'Salomé y Camila',
   },
 
   /** Quiénes somos. */
