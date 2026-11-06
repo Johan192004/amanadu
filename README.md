@@ -76,7 +76,7 @@ Cree un archivo en `src/content/articulos/`. Use `linea` con uno de estos valore
 
 ### Completar «Nosotras»
 
-Edite `src/data/nosotras.ts`. La historia y el equipo están vacíos a propósito para no inventar información. Mientras están vacíos, en `npm run dev` aparece un aviso de «Contenido pendiente», y en el sitio publicado esas secciones no se muestran.
+Edite `src/data/nosotras.ts`. El equipo está vacío a propósito para no inventar información. Mientras están vacíos, en `npm run dev` aparece un aviso de «Contenido pendiente», y en el sitio publicado esas secciones no se muestran.
 
 ### Redes y correo
 
@@ -91,7 +91,8 @@ Todas las fotos se reemplazan subiendo un archivo a `public/images/` con el nomb
 - [ ] Logos oficiales en `public/brand/` (hoy se ve un logotipo tipográfico provisional).
 - [x] Manual de marca en `public/manual/manual-de-marca-amanadu.pdf` (versión optimizada; el original está en `originales/`, fuera de git).
 - [x] Fotografías (ver `docs/fotografias.md`), incluida la de «Nosotras».
-- [ ] Historia y equipo en `src/data/nosotras.ts`.
-- [ ] Redes y correo en `src/config/site.ts`.
+- [x] Propósito, misión, visión y origen del nombre (tomados del manual de marca).
+- [ ] Equipo en `src/data/nosotras.ts`.
+- [x] Instagram en `src/config/site.ts`. Falta el correo, si lo hay.
 - [ ] Revisión editorial de las fuentes de los artículos.
 - [ ] Dominio definitivo en `astro.config.mjs`.

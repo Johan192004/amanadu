@@ -42,12 +42,31 @@ const tonos = ['naranja', 'azul', 'coral', 'verde'] as const;
     <div class="contenedor proposito">
       <div>
         <p class="antetitulo">Propósito</p>
-        <h2 id="proposito-titulo" class="titulo-xl">El tiempo libre también merece un lugar</h2>
+        <p class="nota">En pocas palabras:</p>
+        <h2 id="proposito-titulo" class="titulo-l proposito__frase">{nosotras.proposito.enPocasPalabras}</h2>
       </div>
       <div class="proposito__texto">
-        {nosotras.proposito.map((p) => <p>{p}</p>)}
+        <h3 class="proposito__subtitulo">¿Qué nos llamó la atención?</h3>
+        <p>{nosotras.proposito.loQueNosLlamoLaAtencion}</p>
+        <h3 class="proposito__subtitulo">Entonces proponemos…</h3>
+        <p>{nosotras.proposito.proponemos}</p>
         <Eslogan class="proposito__eslogan" />
       </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-label="Misión y visión">
+    <div class="contenedor mision-vision">
+      <article class="mv bloque-naranja">
+        <Icono nombre="flag" tamano={30} />
+        <h2 class="titulo-l">Misión</h2>
+        <p>{nosotras.mision}</p>
+      </article>
+      <article class="mv bloque-verde sobre-oscuro">
+        <Icono nombre="sparkles" tamano={30} />
+        <h2 class="titulo-l">Visión</h2>
+        <p>{nosotras.vision}</p>
+      </article>
     </div>
   </section>
 
@@ -71,27 +90,29 @@ const tonos = ['naranja', 'azul', 'coral', 'verde'] as const;
     </div>
   </section>
 
-  {
-    (nosotras.historia.length > 0 || import.meta.env.DEV) && (
-      <section class="seccion bloque-hueso" aria-labelledby="historia-titulo">
-        <div class="contenedor historia">
-          <div>
-            <p class="antetitulo">Historia</p>
-            <h2 id="historia-titulo" class="titulo-xl">
-              Cómo empezó Amanadu
-            </h2>
-          </div>
-          <div class="historia__texto">
-            {nosotras.historia.length > 0 ? (
-              nosotras.historia.map((p) => <p>{p}</p>)
-            ) : (
-              <Pendiente campo="historia de Amanadu" donde="src/data/nosotras.ts → historia" />
-            )}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  <section class="seccion bloque-hueso" aria-labelledby="origen-titulo">
+    <div class="contenedor">
+      <div class="cabecera-seccion">
+        <p class="antetitulo">De dónde venimos</p>
+        <h2 id="origen-titulo" class="titulo-xl">Un nombre y una manada</h2>
+      </div>
+      <div class="origen">
+        <article class="origen__nombre">
+          <h3 class="origen__titulo">El nombre</h3>
+          <p class="definicion">
+            <span class="definicion__palabra">{nosotras.origen.nombre.palabra}</span>
+            <span class="definicion__marca">{nosotras.origen.nombre.marca}</span>
+          </p>
+          <p class="definicion__texto"><strong>1.</strong> {nosotras.origen.nombre.definicion}</p>
+          <p class="nota definicion__ejemplo">«{nosotras.origen.nombre.ejemplo}»</p>
+        </article>
+        <article class="origen__mascota">
+          <h3 class="origen__titulo">Cómo nació {nosotras.origen.mascota.nombre}</h3>
+          {nosotras.origen.mascota.texto.map((p) => <p>{p}</p>)}
+        </article>
+      </div>
+    </div>
+  </section>
 
   {
     (nosotras.equipo.length > 0 || import.meta.env.DEV) && (
@@ -254,28 +275,99 @@ const tonos = ['naranja', 'azul', 'coral', 'verde'] as const;
     font-size: var(--t-m);
   }
 
-  .historia {
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: clamp(2rem, 6vw, 5rem);
+  .proposito__frase {
+    font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+    line-height: 1;
   }
 
-  @media (max-width: 860px) {
-    .historia {
+  .proposito__subtitulo {
+    margin-top: 0.5rem;
+    font-family: var(--f-texto);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--naranja);
+  }
+
+  .mision-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 760px) {
+    .mision-vision {
       grid-template-columns: 1fr;
     }
   }
 
-  .historia > div:first-child {
+  .mv {
     display: grid;
     gap: 1rem;
     align-content: start;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    box-shadow: 8px 8px 0 var(--azul);
+    font-size: 1.1rem;
   }
 
-  .historia__texto {
+  .origen {
     display: grid;
-    gap: 1.25rem;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  @media (max-width: 760px) {
+    .origen {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .origen article {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
     font-size: 1.1rem;
+  }
+
+  .origen__titulo {
+    font-family: var(--f-texto);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Entrada de diccionario para «amañado» */
+  .origen__nombre {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--hueso);
+  }
+
+  .definicion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .definicion__palabra {
+    font-family: var(--f-titulo);
+    font-size: var(--t-xl);
+    line-height: 1;
+  }
+
+  .definicion__marca {
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .definicion__ejemplo {
+    color: var(--coral);
   }
 
   .equipo {

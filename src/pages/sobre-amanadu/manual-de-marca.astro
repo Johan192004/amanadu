@@ -11,19 +11,99 @@ import { resolverPublico } from '../../lib/recursos';
 const pdf = resolverPublico(site.manual.pdf);
 const portada = resolverPublico(site.manual.portada);
 
+// Nombres, significados y códigos tomados del manual de marca (pp. 18 a 21).
 const colores = [
-  { nombre: 'Naranja', hex: '#FF702E', clase: 'naranja' },
-  { nombre: 'Azul', hex: '#022E8B', clase: 'azul' },
-  { nombre: 'Rojo coral', hex: '#FF614F', clase: 'coral' },
-  { nombre: 'Hueso', hex: '#F2E9C5', clase: 'hueso' },
-  { nombre: 'Verde', hex: '#2C5324', clase: 'verde' },
+  {
+    nombre: 'Mandarina alegre',
+    grupo: 'Principal',
+    significado: 'Es la creatividad, el optimismo, el ocio y el juego.',
+    hex: '#FF702E',
+    rgb: '255, 112, 46',
+    cmyk: '0, 66, 81, 0',
+    clase: 'naranja',
+  },
+  {
+    nombre: 'Rey vivo',
+    grupo: 'Principal',
+    significado: 'Representa la confianza, los vínculos y los parches.',
+    hex: '#022E8B',
+    rgb: '2, 46, 139',
+    cmyk: '100, 87, 20, 3',
+    clase: 'azul',
+  },
+  {
+    nombre: 'Bálsamo',
+    grupo: 'Principal',
+    significado: 'Se relaciona con la interacción, la emoción, la cercanía y la calidez.',
+    hex: '#FF614F',
+    rgb: '255, 97, 79',
+    cmyk: '0, 73, 62, 0',
+    clase: 'coral',
+  },
+  {
+    nombre: 'Hueso',
+    grupo: 'Secundario',
+    significado: 'Aporta equilibrio a la paleta de colores y facilita el contraste.',
+    hex: '#F2E9C5',
+    rgb: '242, 233, 197',
+    cmyk: '0, 4, 19, 5',
+    clase: 'hueso',
+  },
+  {
+    nombre: 'Tamal',
+    grupo: 'Secundario',
+    significado: 'Conecta con la fauna de Amanadu y la diversidad cultural de Colombia.',
+    hex: '#2C5324',
+    rgb: '44, 83, 36',
+    cmyk: '82, 42, 100, 42',
+    clase: 'verde',
+  },
 ];
 
+// Descripciones del manual de marca (pp. 23 a 25).
 const tipografias = [
-  { nombre: 'Erica One', uso: 'Títulos', clase: 'titulo', muestra: 'Hay que jugar' },
-  { nombre: 'Elms Sans', uso: 'Texto general', clase: 'texto', muestra: 'Juegos para recuperar el tiempo libre y compartirlo.' },
-  { nombre: 'Mynerve', uso: 'Textos llamativos', clase: 'nota', muestra: '¡sin afán!' },
+  {
+    nombre: 'Erica One',
+    uso: 'Principal · títulos y textos llamativos',
+    descripcion: 'Una fuente amigable y llamativa que transmite energía sin verse muy pesada.',
+    clase: 'titulo',
+    muestra: 'Hay que jugar',
+  },
+  {
+    nombre: 'Elms Sans',
+    uso: 'Secundaria · textos largos',
+    descripcion: 'Versátil, simple y cómoda de leer. Su peso varía según la intención del texto.',
+    clase: 'texto',
+    muestra: 'Juegos para recuperar el tiempo libre y compartirlo.',
+  },
+  {
+    nombre: 'Mynerve',
+    uso: 'Terciaria · textos juguetones y mensajes cortos',
+    descripcion: 'Divertida y dinámica: transmite cercanía sin verse desordenada.',
+    clase: 'nota',
+    muestra: '¡No se deje comer de la rutina!',
+  },
 ];
+
+// Glosario y usos incorrectos del logo (pp. 14 y 17).
+const conceptosLogo = [
+  { termino: 'Geometrización', definicion: 'Las figuras que componen nuestro logo.' },
+  { termino: 'Planimetría', definicion: 'Las medidas que relacionan cada elemento de nuestro logo.' },
+  { termino: 'Área de seguridad', definicion: 'La cantidad de espacio libre alrededor de nuestro logo.' },
+];
+
+const usosIncorrectos = [
+  'Rayarlo',
+  'Modificar sus ángulos',
+  'Cambiar sus colores',
+  'Editar sus proporciones',
+  'Modificar su opacidad',
+  'Utilizar degradados',
+  'Sobreponerle imágenes',
+];
+
+// Estilo de fotografía (p. 32).
+const estiloFotografico = ['Textura', 'Nostalgia', 'Editorial', 'Espontáneas', 'Neutras', 'Serenidad'];
 ---
 
 <Base
@@ -37,8 +117,8 @@ const tipografias = [
         <p class="antetitulo">Sobre Amanadu</p>
         <h1 id="manual-titulo" class="titulo-mega">Manual de marca</h1>
         <p class="lead">
-          Las reglas de juego de nuestra identidad: cómo usar el logo, los colores y las tipografías para que Amanadu se
-          vea y se sienta igual en todas partes.
+          Las reglas de juego de nuestra identidad: el documento que define cómo usar el logo, los colores, las
+          tipografías y el tono de voz para que Amanadu se vea y se sienta igual en todas partes.
         </p>
         {
           pdf && (
@@ -84,18 +164,36 @@ const tipografias = [
       <div class="cabecera-seccion">
         <p class="antetitulo">Lo básico</p>
         <h2 id="basicos-titulo" class="titulo-xl">Colores</h2>
-        <p>Toque un color para copiar su código.</p>
+        <p>Tres colores principales y dos secundarios, cada uno con su razón de ser.</p>
       </div>
       <ul class="colores">
         {
           colores.map((c) => (
-            <li>
-              <button type="button" class={`color color--${c.clase}`} data-copiar={c.hex}>
-                <span class="color__nombre">{c.nombre}</span>
-                <span class="color__hex">{c.hex}</span>
-                <span class="color__estado" aria-live="polite">
-                  <Icono nombre="copy" tamano={16} /> <span data-copiar-texto>Copiar</span>
-                </span>
+            <li class={`color color--${c.clase}`}>
+              <p class="color__grupo">{c.grupo}</p>
+              <h3 class="color__nombre">{c.nombre}</h3>
+              <p class="color__significado">{c.significado}</p>
+              <dl class="color__codigos">
+                <div>
+                  <dt>HEX</dt>
+                  <dd>{c.hex}</dd>
+                </div>
+                <div>
+                  <dt>RGB</dt>
+                  <dd>{c.rgb}</dd>
+                </div>
+                <div>
+                  <dt>CMYK</dt>
+                  <dd>{c.cmyk}</dd>
+                </div>
+              </dl>
+              <button
+                type="button"
+                class="color__copiar"
+                data-copiar={c.hex}
+                aria-label={`Copiar el código ${c.hex} de ${c.nombre}`}
+              >
+                <Icono nombre="copy" tamano={16} /> <span data-copiar-texto aria-live="polite">Copiar HEX</span>
               </button>
             </li>
           ))
@@ -111,6 +209,7 @@ const tipografias = [
                 <strong>{t.nombre}</strong> · {t.uso}
               </p>
               <p class={`tipo__muestra tipo__muestra--${t.clase}`}>{t.muestra}</p>
+              <p class="tipo__descripcion">{t.descripcion}</p>
             </li>
           ))
         }
@@ -121,6 +220,38 @@ const tipografias = [
         <div class="logos__caja logos__caja--claro"><Logo /></div>
         <div class="logos__caja logos__caja--oscuro"><Logo variante="claro" /></div>
       </div>
+
+      <div class="logo-reglas">
+        <dl class="conceptos">
+          {
+            conceptosLogo.map((c) => (
+              <div class="concepto">
+                <dt>{c.termino}</dt>
+                <dd>{c.definicion}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <div class="mane">
+          <p class="nota mane__titulo">¡No sea mañé!</p>
+          <h3 class="mane__subtitulo">Usos incorrectos del logo</h3>
+          <ul class="mane__lista">
+            {
+              usosIncorrectos.map((u) => (
+                <li>
+                  <Icono nombre="x" tamano={16} /> {u}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="titulo-xl tipos-titulo">Estilo de fotografía</h2>
+      <p class="estilo__intro">Las fotos de Amanadu se reconocen por estas cualidades:</p>
+      <ul class="estilo">
+        {estiloFotografico.map((e) => <li>{e}</li>)}
+      </ul>
     </div>
   </section>
 
@@ -189,7 +320,7 @@ const tipografias = [
       } catch {
         texto.textContent = 'No se pudo copiar';
       }
-      window.setTimeout(() => (texto.textContent = 'Copiar'), 1800);
+      window.setTimeout(() => (texto.textContent = 'Copiar HEX'), 1800);
     });
   });
 
@@ -319,21 +450,13 @@ const tipografias = [
   }
 
   .color {
-    display: grid;
-    align-content: end;
-    gap: 0.25rem;
-    width: 100%;
-    min-height: 11rem;
-    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 1.25rem;
     border: 2px solid var(--azul);
     border-radius: var(--radio);
-    text-align: left;
-    cursor: pointer;
-    transition: transform 0.15s;
-  }
-
-  .color:hover {
-    transform: translateY(-4px);
   }
 
   .color--naranja {
@@ -361,24 +484,64 @@ const tipografias = [
     color: var(--hueso);
   }
 
+  .color__grupo {
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
   .color__nombre {
-    font-family: var(--f-titulo);
-    font-size: 1.35rem;
+    font-size: 1.45rem;
     line-height: 1;
   }
 
-  .color__hex {
-    font-weight: 700;
+  .color__significado {
+    font-size: var(--t-s);
+    line-height: 1.4;
+  }
+
+  .color__codigos {
+    display: grid;
+    gap: 0.15rem;
+    margin: auto 0 0;
+    padding-top: 0.75rem;
+    font-size: var(--t-xs);
     font-variant-numeric: tabular-nums;
   }
 
-  .color__estado {
+  .color__codigos div {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .color__codigos dt {
+    min-width: 2.75rem;
+    font-weight: 800;
+  }
+
+  .color__codigos dd {
+    margin: 0;
+  }
+
+  .color__copiar {
     display: inline-flex;
     align-items: center;
+    align-self: flex-start;
     gap: 0.35rem;
-    margin-top: 0.5rem;
+    padding: 0.35rem 0.8rem;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
     font-size: var(--t-xs);
     font-weight: 700;
+    cursor: pointer;
+  }
+
+  .color__copiar:hover {
+    background: color-mix(in srgb, currentColor 15%, transparent);
   }
 
   .tipos-titulo {
@@ -399,6 +562,11 @@ const tipografias = [
   }
 
   .tipo__meta {
+    font-size: var(--t-s);
+  }
+
+  .tipo__descripcion {
+    max-width: 60ch;
     font-size: var(--t-s);
   }
 
@@ -447,6 +615,112 @@ const tipografias = [
 
   .logos__caja--oscuro {
     background: var(--azul);
+  }
+
+  .logo-reglas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 760px) {
+    .logo-reglas {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .conceptos {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    align-content: start;
+  }
+
+  .concepto {
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--azul);
+  }
+
+  .concepto dt {
+    font-family: var(--f-titulo);
+    font-size: 1.3rem;
+  }
+
+  .concepto dd {
+    margin: 0.25rem 0 0;
+  }
+
+  .mane {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.5rem;
+    border: 2px solid var(--azul);
+    border-radius: var(--radio);
+    background: var(--coral);
+    color: var(--azul);
+  }
+
+  .mane__titulo {
+    color: var(--azul) !important;
+    transform: rotate(-2deg);
+    transform-origin: left;
+  }
+
+  .mane__subtitulo {
+    font-family: var(--f-texto);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .mane__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 0.5rem 1rem;
+    list-style: none;
+    margin-top: 0.5rem;
+    font-weight: 700;
+  }
+
+  .mane__lista li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .estilo__intro {
+    margin-bottom: 1rem;
+  }
+
+  .estilo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+  }
+
+  .estilo li {
+    padding: 0.5rem 1.25rem;
+    border: 2px solid var(--azul);
+    border-radius: 999px;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+  }
+
+  .estilo li:nth-child(3n + 1) {
+    background: var(--naranja);
+  }
+
+  .estilo li:nth-child(3n + 2) {
+    background: var(--azul);
+    color: var(--hueso);
+  }
+
+  .estilo li:nth-child(3n) {
+    background: var(--hueso-claro);
   }
 
   .visor {

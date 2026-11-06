@@ -12,14 +12,19 @@ import Forma from './Forma.astro';
   <div class="contenedor pausa__grilla">
     <div class="pausa__texto">
       <p class="antetitulo">Un espacio para hacer una pausa</p>
-      <h2 id="pausa-titulo" class="titulo-xxl">¿Y si hoy no aprovecha el tiempo?</h2>
+      <h2 id="pausa-titulo" class="titulo-xxl">¿Hace cuánto no se ríe a carcajadas?</h2>
+      <ul class="pausa__preguntas">
+        <li>¿Hace cuánto no juega su juego de mesa favorito con sus amigos?</li>
+        <li>¿Hace cuánto no siente verdadera calma?</li>
+      </ul>
       <p class="lead">
-        Nos enseñaron a llenar cada minuto. A sentir culpa por descansar. A convertir hasta el ocio en una meta.
-        Aquí le proponemos lo contrario: perder el tiempo a propósito.
+        Nos enseñaron a llenar cada minuto y a sentir culpa por descansar. Dese la oportunidad de regresar a lo que le
+        hace sentirse vivo, donde de verdad se amaña y encuentra calma.
       </p>
       <p class="pausa__remate">
         Jugar, reír, conversar o no hacer nada también cuentan. El tiempo libre no tiene que rendir.
       </p>
+      <p class="nota pausa__lema">¡No se deje comer de la rutina!</p>
 
       <div class="pausa__minuto" data-minuto>
         <button type="button" class="boton boton--naranja" data-minuto-iniciar>
@@ -81,6 +86,21 @@ import Forma from './Forma.astro';
     display: grid;
     gap: 1.5rem;
     justify-items: start;
+  }
+
+  .pausa__preguntas {
+    display: grid;
+    gap: 0.35rem;
+    list-style: none;
+    font-family: var(--f-titulo);
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    line-height: 1.15;
+    color: var(--naranja);
+  }
+
+  .pausa__lema {
+    transform: rotate(-2deg);
+    transform-origin: left;
   }
 
   .pausa__remate {

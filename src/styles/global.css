@@ -9,12 +9,12 @@
 @import '@fontsource-variable/elms-sans/wght.css';
 
 :root {
-  /* Paleta oficial */
-  --naranja: #ff702e;
-  --azul: #022e8b;
-  --coral: #ff614f;
-  --hueso: #f2e9c5;
-  --verde: #2c5324;
+  /* Paleta oficial (nombres del manual de marca) */
+  --naranja: #ff702e; /* Mandarina alegre */
+  --azul: #022e8b; /* Rey vivo */
+  --coral: #ff614f; /* Bálsamo */
+  --hueso: #f2e9c5; /* Hueso */
+  --verde: #2c5324; /* Tamal */
 
   /* Derivados para superficies y líneas */
   --hueso-claro: #f8f3de;

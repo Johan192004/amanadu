@@ -38,7 +38,7 @@ export const site = {
    * Iconos disponibles: 'instagram', 'mail', 'globe'.
    */
   redes: [
-    // { nombre: 'Instagram', url: 'https://instagram.com/...', icono: 'instagram' },
+    { nombre: 'Instagram @amanadu.ludo', url: 'https://www.instagram.com/amanadu.ludo/', icono: 'instagram' },
   ] as { nombre: string; url: string; icono: 'instagram' | 'mail' | 'globe' }[],
   correo: '',
 } as const;
